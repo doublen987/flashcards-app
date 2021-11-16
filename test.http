@@ -1,0 +1,25 @@
+@host = http://localhost:5000
+
+POST {{host}}/state
+Content-Type: application/json
+
+[
+    {
+        "question": "Sta je Lagranzova teorema",
+        "answer": "bla bla bla"
+    },
+    {
+        "question": "Sta je Integral",
+        "answer": "bla bla integral bla"
+    },
+    {
+        "question": "Sta je diferencijabilna funkcija",
+        "answer": "bla bla bla"
+    }
+]
+
+
+
+### 
+
+GET {{host}}/state

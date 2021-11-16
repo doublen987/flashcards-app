@@ -1,0 +1,65 @@
+.slideshowcontainer {
+    display: inline-block;
+    width: calc(100% - 300px);
+}
+
+.hintcontainer {
+    overflow-wrap: break-word;
+    width: 400px;
+    height: 200px;
+    margin: auto;
+    margin-top: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    flex-direction: column;
+}
+
+.hint {
+    width: 100%;
+    overflow-wrap: break-word;
+    margin-bottom: 10px;
+}
+
+.slideshow {
+    background-color: #cad0d7;
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3%;
+    font-size: 50px;
+    margin-top: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+.btncontainer {
+    padding: 20px 0 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btnflashcard {
+    width: 80px;
+    height: 40px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    margin-right: 20px;
+    border: 3px solid #333e51;
+}
+
+.btnflashcard:hover {
+    background-color: #333e51;
+    color: #d2ac34;
+    cursor: pointer;
+}
+

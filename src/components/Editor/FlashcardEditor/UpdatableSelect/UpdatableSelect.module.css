@@ -1,0 +1,37 @@
+.updatableselectcontainer {
+    position: relative;
+}
+
+.updatableselectinput {
+    border: 1px solid #d5dbd9;
+    border-radius: 3px;
+    width: 350px;
+    padding: 8px 10px 8px 10px;
+}
+
+.backdrop {
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+
+.dropdown {
+    background-color: white;
+    border: 1px solid #d5dbd9;
+    border-radius: 3px;
+    z-index: 100;
+    top: 33px;
+    position: absolute;
+    width: 370px
+}
+
+.invisible {
+    display: none;
+}
+
+.dropdownelement:hover {
+    background-color: #cad0d7;
+}

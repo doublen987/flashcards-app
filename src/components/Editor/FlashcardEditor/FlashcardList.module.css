@@ -1,0 +1,86 @@
+.list-container {
+    width: 300px;
+    height: 917px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #cad0d7;
+    box-sizing: border-box;
+}
+
+.ullistcontainer {
+    padding-left: 0px;
+}
+
+.subjectlistitem {
+    list-style-type: none;
+    
+}
+
+.chapterlistitem {
+    padding-left: 20px;
+}
+
+.ul {
+    list-style-type: none;
+    padding-inline-start: 0px;
+}
+
+.display_none {
+    display: none;
+}
+
+.display_unset {
+    display: unset;
+}
+
+.label{
+    width: 100%;
+    color: #333e51;
+    font-family: 'Roboto', sans-serif;
+    padding: 0px 20px 0 20px;
+    background-color: #cad0d7;
+    box-sizing: border-box;
+}
+.label:hover {
+    background-color: steelblue;
+    cursor: pointer;
+}
+
+.flashcard-container {
+    width: 100%;
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.ol {
+    padding-inline-start: 0px;
+    list-style-type: none;
+}
+
+.li {
+    padding: 0 20px 0 20px;
+    list-style-type: none;
+}
+
+.li::marker {
+    color: black;
+}
+
+.flashcardlink {
+    color: #333e51;
+    text-decoration: none;
+    padding-left: 20px;
+}
+
+.flashcardlink-selected{
+    background-color: #333e51;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    color: #d2ac34;
+}
+
+.flashcardlink:hover {
+    background-color: steelblue;
+    cursor: pointer;
+}

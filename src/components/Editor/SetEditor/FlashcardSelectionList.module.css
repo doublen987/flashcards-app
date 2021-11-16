@@ -1,0 +1,68 @@
+.list-container {
+    width: 300px;
+    height: 300px;
+    overflow-y: scroll;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #cad0d7;
+    box-sizing: border-box;
+}
+
+.setul {
+    list-style-type: none;
+    padding-inline-start: 0px;
+}
+
+.display_none {
+    display: none;
+}
+
+.display_unset {
+    display: unset;
+}
+
+.setlabel{
+    width: 70%;
+    color: #333e51;
+    font-family: 'Roboto', sans-serif;
+    padding: 0px 20px 0 20px;
+    background-color: #cad0d7;
+    box-sizing: border-box;
+    display: inline-block;
+}
+.setlabel:hover {
+    background-color: steelblue;
+    cursor: pointer;
+}
+
+.flashcard-container {
+    width: 100%;
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.ol {
+    padding-inline-start: 0px;
+}
+
+.li {
+    padding: 0 20px 0 20px;
+}
+
+.li::marker {
+    color: black;
+}
+
+.flashcardlink {
+    color: #333e51;
+    text-decoration: none;
+}
+
+.flashcardlink-selected{
+    background-color: white;
+}
+
+.flashcardlink:hover {
+    background-color: steelblue;
+    cursor: pointer;
+}

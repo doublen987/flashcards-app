@@ -1,0 +1,77 @@
+.editor-container {
+    width: calc(100% - 300px);
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 30px;
+    padding-left: 50px;
+    box-sizing: border-box;
+}
+
+.editorsubcontainer {
+    width: 600px;
+    margin: auto;
+}
+
+.hintul {
+    list-style-type: none;
+    width: 350px;
+    margin-top: 0px;
+    padding-inline-start: 0px;
+}
+
+.hintli {
+    display: flex;
+    margin: 0 0 5px 0;
+}
+
+.hint {
+    width: 300px;
+    overflow: hidden;
+    color: linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1));
+}
+
+.hintdeletebtn {
+    margin-left: 10px;
+}
+
+.inputcontainer {
+    display: flex;
+    margin: 10px 0px 10px 0px;
+}
+
+.label {
+    width: 150px;
+    font-family: 'Roboto', sans-serif;
+    align-self: center;
+}
+
+.input, .textarea, .hinttextarea {
+    width: 350px;
+    outline: none;
+    border: 1px solid #d5dbd9;
+    font-size: 15px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hinttextarea {
+    width: 300px;
+    margin: 0 10px 0 0;
+    box-sizing: border-box;
+}
+
+.hintbtn {
+    width: 50px;
+    box-sizing: border-box;
+    
+}
+
+.submitbuttonscontainer {
+    display: flex;
+    justify-content: center;
+}
+
+.submitbtn {
+    margin-right: 20px;
+}
