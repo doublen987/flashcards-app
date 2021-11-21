@@ -14,6 +14,8 @@ app.get('/home', (req,res) => {
     res.sendFile(path.resolve('./dist/index.bundle.js'))
 })
 
+app.use('/assets', express.static(path.join(__dirname, 'assets')))
+
 app.get('/state', (req, res) => {
     let flashcards = storage.getFlashcards()
     if(flashcards) {
