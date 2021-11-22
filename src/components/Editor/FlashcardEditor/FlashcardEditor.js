@@ -48,11 +48,44 @@ function FlashcardEditor(props) {
         function addFlashcard() {
             let newid = ""+Date.now()
 
+            let subjects = new Map(appContext.subjects) 
+            if(stateflashcard.subject !== "") {
+                if(subjects.has(stateflashcard.subject)) {
+                    let subject = subjects.get(stateflashcard.subject)
+                    if(!subject.chapters.has(stateflashcard.chapter)) {
+                        
+                        subject.chapters.set(stateflashcard.chapter, {
+                            subject: stateflashcard.subject,
+                            position: chapters.size,
+                            name: stateflashcard.chapter
+                        })
+                    } 
+                } else {
+                    subjects.set(stateflashcard.subject, {
+                        name: stateflashcard.subject,
+                        chapters: new Map([["Other", {
+                            subject: stateflashcard.subject,
+                            position: 0,
+                            name: "Other"
+                        }]])
+                    })
+                }
+            } 
+
+            let position = -1;
+            appContext.flashcards.forEach((flashcard) => {
+                if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
+                    position = stateflashcard.position;
+                }
+            })
+
             changeAppStateContext({
                 ...appContext,
+                subjects: subjects,
                 flashcards: new Map(
                     appContext.flashcards.set(newid, {
                         ...stateflashcard,
+                        position: position + 1,
                         id: newid
                     })
                 )
@@ -72,11 +105,21 @@ function FlashcardEditor(props) {
         }
 
         function deleteFlashcard() {
+            let newFlashcards = new Map(appContext.flashcards)
+            newFlashcards.forEach((flashcard) => {
+                if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter) {
+                    if(flashcard.position > stateflashcard.position)
+                        newFlashcards.set(flashcard.id, {
+                            ...flashcard,
+                            position: flashcard.position - 1
+                        })
+                }
+            })
+            newFlashcards.delete(flashcardid)
+
             changeAppStateContext({
                 ...appContext,
-                flashcards: new Map(
-                    appContext.flashcards.delete(flashcardid)
-                )
+                flashcards: newFlashcards
             })
             setFlashcard(baseflashcard)
         }

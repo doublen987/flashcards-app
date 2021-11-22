@@ -18,7 +18,6 @@
 }
 
 .chapterlistitem {
-    padding-left: 20px;
 }
 
 .ul {
@@ -59,16 +58,16 @@
     list-style-type: none;
 }
 
-.li {
+/* .flashcardli {
     padding: 0 20px 0 20px;
     list-style-type: none;
-}
+} */
 
 .li::marker {
     color: black;
 }
 
-.flashcardlink {
+.flashcardli {
     color: #333e51;
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
@@ -76,7 +75,7 @@
     padding-left: 20px;
 }
 
-.flashcardlink-selected{
+.flashcardli-selected{
     background-color: #333e51;
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
@@ -84,7 +83,19 @@
     color: #d2ac34;
 }
 
-.flashcardlink:hover {
+.flashcardli:hover {
     background-color: steelblue;
     cursor: pointer;
 }
+
+.flashcardlink {
+    color: #333e51;
+    text-decoration: none;
+}
+
+.flashcardlink-selected {
+    color: #d2ac34;
+    text-decoration: none;
+}
+
+

@@ -13,30 +13,96 @@ export const ChangeAppStateContext = React.createContext();
 
 var random = Date.now();
 
+
+
 let appInit = {
-    subjects: [
-        {
+    bla: new Map([
+        ["subject-"+random+1, {
             "id": 0,
-            "name": "Matematika 2"
-        },
-        {
+            "name": "Matematika 2",
+            chapters: new Map([
+                ["chapter-"+random+1, {
+                    "id": "chapter-"+random+1,
+                    "name": "Uvod",
+                    flashcards: [
+                        
+                    ]
+                }],
+                ["chapter-"+random+2, {
+                    "id": "chapter-"+random+2,
+                    "name": "Lagranzova teorija",
+                    flashcards: [
+                        {
+                            id: ""+random+1,
+                            question: "Sta je lagranzova teorija?",
+                            answer: "Lagranzova teorija je...",
+                            subject: "Matematika 2",
+                            chapter: "Srednja vrednost",
+                            hints: [
+                                "hint1", 
+                                "hint2",
+                                "hint3"
+                            ]
+                        }
+                    ]
+                }],
+                ["chapter-"+random+3, {
+                    "id": "chapter-"+random+3,
+                    "name": "Diferencijalne funkcije"
+                }]
+            ])
+        }],
+        ["subject-"+random+2, {
             "id": 1,
             "name": "Projektovanje Softvera"
-        }
-    ],
-    chapters: [
-        {
-            "id": 0,
-            "subjectid": 0,
-            "name":"Srednja vrednost",
-        }
-    ],
+        }],
+        ["subject-"+random+3, {
+            "id": 1,
+            "name": "Projektovanje Softvera"
+        }]
+    ]),
+    subjects: new Map([
+        ["Matematika 2", {
+            chapters: new Map([
+                ["other", {
+                    name: "other",
+                    position: 0,
+                    subject: "Matematika 2"
+                }],
+                ["Srednja vrednost", {
+                    name: "Srednja vrednost",
+                    position: 1,
+                    subject: "Matematika 2"
+                }]
+            ])
+        }],
+        ["Statistika", {
+            chapters: new Map([
+                ["other", {
+                    name: "other",
+                    position: 0,
+                    subject: "Statistika"
+                }],
+                ["Dovoljnost statistika", {
+                    name: "Dovoljnost statistika",
+                    position: 1,
+                    subject: "Statistika"
+                }],
+                ["Ocene", {
+                    name: "Ocene",
+                    position: 2,
+                    subject: "Statistika"
+                }],
+            ])
+        }]
+    ]),
     flashcards: new Map([[""+random+1, {
         id: ""+random+1,
         question: "Sta je lagranzova teorija?",
         answer: "Lagranzova teorija je...",
         subject: "Matematika 2",
         chapter: "Srednja vrednost",
+        position: 0,
         hints: [
             "hint1", 
             "hint2",
@@ -49,6 +115,7 @@ let appInit = {
         subject: "Matematika 2",
         chapter: "Srednja vrednost",
         answer: "Integralna suma je...",
+        position: 1,
         hints: [
             "hint1", 
             "hint2",
@@ -61,6 +128,7 @@ let appInit = {
         subject: "Statistika",
         chapter: "Dovoljnost statistika",
         answer: "Dovoljna statistika je ona koji ima sve informacije iz originalne statistike",
+        position: 0,
         hints: [
             "hint1", 
             "hint2",
@@ -73,24 +141,13 @@ let appInit = {
         subject: "Statistika",
         chapter: "Ocene",
         answer: "Efikasna ocena je ona sa najmanjom varijansom",
+        position: 0,
         hints: [
             "hint1", 
             "hint2",
             "hint3"
         ]
     }]]),
-    sets: [
-        {
-            id: 0,
-            name: "Matematika 2",
-            subjects: new Map()
-        },
-        {
-            id: 1,
-            name: "Statistika",
-            subjects: new Map()
-        }
-    ],
     quizes: [
         {
             id: 0,
@@ -144,9 +201,9 @@ function App() {
     //let tmpState = JSON.parse(localStorage.getItem("appState"))
     let tmpState = appInit
     tmpState.flashcards = mapFromArray(tmpState.flashcards)
-    console.log(tmpState)
 
     const [appState, changeAppState] = useState(tmpState)
+    console.log(appState)
 
     function saveState(state) {
         let tmpState = {
