@@ -23,7 +23,7 @@ const Editor = function() {
                   let redirect = <Redirect to={`/editor`}></Redirect>;
                   if(appContext.flashcards.has(props.match.params.flashcardid))
                     redirect = <div>
-                        <FlashcardList key={"flashcardlist-"+Date.now()} flashcardid={props.match.params.flashcardid} flashcards={flashcards}></FlashcardList>
+                        <FlashcardList key={"flashcardlist-"+props.match.params.flashcardid} flashcardid={props.match.params.flashcardid} flashcards={flashcards}></FlashcardList>
                         <FlashcardEditor key={"flashcardeditor-" + props.match.params.flashcardid} flashcardid={props.match.params.flashcardid}></FlashcardEditor>
                     </div>;
                   return(
@@ -43,7 +43,7 @@ const Editor = function() {
                 )}/>
                 <Route path={path}>
                     <div>
-                        <FlashcardList key={"flashcardlist-"+Date.now()}flashcards={flashcards}></FlashcardList>
+                        <FlashcardList flashcards={flashcards}></FlashcardList>
                         <FlashcardEditor></FlashcardEditor>
                     </div>
                 </Route>

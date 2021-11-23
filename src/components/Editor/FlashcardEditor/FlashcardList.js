@@ -7,6 +7,9 @@ import { arrayFromMap, functionGetSubjectsMapFromFlashcards, stringInitialized }
 import {sortableContainer, sortableElement, SortableHandle} from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
 import Aux from "../../hoc/Aux";
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 
 
 const FlashcardList = function(props) {
@@ -14,13 +17,13 @@ const FlashcardList = function(props) {
     const appContext = useContext(AppStateContext)
     const changeAppStateContext = useContext(ChangeAppStateContext)
 
-    const [state,setState] = useState(function getInitialState() {
+    function arrayToMap(flashcards) {
         let subjectsMap = new Map();
         subjectsMap.set("other", {
             selected: false,
             flashcards: []
         })
-        props.flashcards.forEach(flashcard => {
+        flashcards.forEach(flashcard => {
             let selected = false;
             if(flashcard.id === props.flashcardid) 
                 selected = true;
@@ -89,12 +92,16 @@ const FlashcardList = function(props) {
                 }
             }
         });
+        return subjectsMap;
+    }
+
+    const [state,setState] = useState(function getInitialState() {
         return {
-            subjects: subjectsMap
+            subjects: arrayToMap(appContext.flashcards)
         }
     });
 
-    const DragHandle = SortableHandle(() => <span>::</span>);
+    const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
 
     const SortableItem = sortableElement(({children, className}) => { 
         return <li className={className}>{children}</li>
@@ -169,6 +176,17 @@ const FlashcardList = function(props) {
                 ...appContext,
                 subjects: newSubjects
             })
+            let newStateSubjects = new Map(state.subjects)
+            let stateSubject = newStateSubjects.get(subjectName)
+            newChapters.forEach((chapter, chapterName) => {
+                if(stateSubject.chapters.get(chapterName)) {
+                    stateSubject.chapters.get(chapterName).position = chapter.position
+                }
+            })
+            setState({
+                ...state,
+                subjects: newStateSubjects
+            })
         }
     }
 
@@ -202,6 +220,11 @@ const FlashcardList = function(props) {
                 ...appContext,
                 flashcards: newFlashcards
             })
+
+            setState({
+                ...state,
+                subjects: arrayToMap(newFlashcards)
+            })
         }
     }
 
@@ -231,7 +254,6 @@ const FlashcardList = function(props) {
         } else {
             let chapterIndex = 0;
             subject.chapters.forEach((chapter, chapterName) => {
-                console.log(chapter.position)
                 chapters[chapter.position] = (
                 //Chapters
                     <SortableItem 

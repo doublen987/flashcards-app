@@ -60,15 +60,15 @@ const FlashcardSelectionList = function(props) {
         appContext.flashcards.forEach((flashcard, flashcardIndex) => {
             //If the flashcard doesnt have a subject add it to the "other" subtree
             if(!stringInitialized(flashcard.subject)) {
+                let tmpflashcards = subjectsMap.get("other").flashcards
+                tmpflashcards[flashcard.position] = {
+                    ...flashcard,
+                    checked: false
+                }
                 subjectsMap.set("other", {
                     ...subjectsMap.get("other"),
-                    flashcards: [
-                        ...subjectsMap.get("other").flashcards,
-                        {
-                            ...flashcard,
-                            checked: false//getChecked(flashcard.subject, null, flashcard.id)
-                        }
-                    ]
+                    selected: false,
+                    flashcards: tmpflashcards
                 })
             } else {
                 let chaptersMap;
@@ -76,6 +76,7 @@ const FlashcardSelectionList = function(props) {
                 if(!subjectsMap.has(flashcard.subject)) {
                     chaptersMap = new Map();
                     chaptersMap.set("other", {
+                        position: appContext.subjects.get(flashcard.subject).chapters.get("other").position,
                         selected: false,
                         checked: false, //getChecked(flashcard.subject, "other"),
                         flashcards: []
@@ -89,33 +90,36 @@ const FlashcardSelectionList = function(props) {
                     chaptersMap = subjectsMap.get(flashcard.subject).chapters
                 }
                 if(!stringInitialized(flashcard.chapter)) {
+                    let tmpflashcards = chaptersMap.get("other").flashcards
+                    tmpflashcards[flashcard.position] = {
+                        ...flashcard,
+                        checked: false
+                    }
                     chaptersMap.set("other", {
                         ...chaptersMap.get("other"),
-                        flashcards: [
-                            ...chaptersMap.get("other").flashcards,
-                            {
-                                ...flashcard,
-                                checked: false//getChecked(flashcard.subject, flashcard.chapter, flashcard.id)
-                            }
-                        ]
+                        selected: false,
+                        checked: false,
+                        flashcards: tmpflashcards
                     })
                 } else {
                     if(chaptersMap.has(flashcard.chapter)) {
                         let chapter = chaptersMap.get(flashcard.chapter); 
-                        chapter.flashcards.push({
+                        chapter.flashcards[flashcard.position] = {
                             ...flashcard,
                             checked: false//getChecked(flashcard.subject, flashcard.chapter, flashcard.id)
-                        })
+                        }
                     } else {
-                        chaptersMap.set(flashcard.chapter, {
-                            selected: false,
-                            checked: false, //getChecked(flashcard.subject, flashcard.chapter),
-                            flashcards: []
-                        })
-                        let chapter = chaptersMap.get(flashcard.chapter); 
-                        chapter.flashcards.push({
+                        let chapter = appContext.subjects.get(flashcard.subject).chapters.get(flashcard.chapter);
+                        let tmpflashcards = []
+                        tmpflashcards[flashcard.position] = {
                             ...flashcard,
-                            checked: false//getChecked(flashcard.subject, flashcard.chapter, flashcard.id)
+                            checked: false
+                        }
+                        chaptersMap.set(flashcard.chapter, {
+                            position: chapter.position,
+                            selected: false,
+                            checked: false,
+                            flashcards: tmpflashcards
                         })
                     }
                 }
@@ -358,8 +362,9 @@ const FlashcardSelectionList = function(props) {
         
         let chapters = [];
         if(subjectName === "other") {
-            chapters = subject.flashcards.map(flashcard => {
-                return (<li key={'flashcard-list-item-'+flashcard.id} className={`${FlashcardSelectionListCSS.li}`}>
+            subject.flashcards.forEach(flashcard => {
+            chapters[flashcard.position] = (
+                <li key={'flashcard-list-item-'+flashcard.id} className={`${FlashcardSelectionListCSS.li}`}>
                     <input 
                     onChange={onFlashcardCheckmarkChange(subjectName, null, flashcard.id )} 
                     type="checkbox" 
@@ -370,7 +375,7 @@ const FlashcardSelectionList = function(props) {
             })
         } else {
             subject.chapters.forEach((chapter, chapterName) => {
-                chapters.push(
+                chapters[chapter.position] = (
                 <li key={'chapter-'+subjectName+"-"+chapterName}>
                     
                     <div 
