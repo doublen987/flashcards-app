@@ -17,6 +17,8 @@ const FlashcardList = function(props) {
     const appContext = useContext(AppStateContext)
     const changeAppStateContext = useContext(ChangeAppStateContext)
 
+    
+
     function arrayToMap(flashcards) {
         let subjectsMap = new Map();
         subjectsMap.set("other", {
@@ -97,9 +99,15 @@ const FlashcardList = function(props) {
 
     const [state,setState] = useState(function getInitialState() {
         return {
-            subjects: arrayToMap(appContext.flashcards)
+            subjects: arrayToMap(props.flashcards)
         }
     });
+
+    useEffect(() => {
+        setState({
+            subjects: arrayToMap(props.flashcards)
+        })
+    }, [props.flashcards])
 
     const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
 

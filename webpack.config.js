@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WatchIgnorePlugin } = require('webpack');
 
 module.exports = {
@@ -7,10 +8,18 @@ module.exports = {
     entry: "./src/index.js",
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: 'index.bundle.js'
+        filename: '[name].js'
     },
     module: {
         rules: [
+            {
+                test: /skin\.css$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+            {
+                test: /content\.css$/i,
+                use: ['css-loader'],
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -23,7 +32,19 @@ module.exports = {
             }
         ]
     },
+    optimization: {
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            tinymceVendor: {
+              test: /[\\/]node_modules[\\/](tinymce)[\\/](.*js|.*skin.css)|[\\/]plugins[\\/]/,
+              name: 'tinymce'
+            },
+          },
+        }
+    },
     plugins: [
+        new MiniCssExtractPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),

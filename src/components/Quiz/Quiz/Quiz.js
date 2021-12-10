@@ -7,7 +7,7 @@ function Quiz(props) {
 
     const appContext = useContext(AppStateContext);
     const changeAppStateContext = useContext(ChangeAppStateContext)
-
+    const [state, setState] = useState({ answerShown: false })
 
     let currentFlashcard = -1;
     if(appContext.quizes[quizid].currentFlashcard > -1 && appContext.quizes[quizid].currentFlashcard < appContext.quizes[quizid].flashcards.length) {
@@ -17,13 +17,22 @@ function Quiz(props) {
     let quiz = "";
     if( appContext.quizes[quizid]) {
         if(currentFlashcard > -1) {
-            quiz = <div className={QuizCSS.slideshow}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
+            if(!state.answerShown)
+                quiz = <div className={QuizCSS.slideshow} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
+            else 
+                quiz = <div className={QuizCSS.slideshow} onClick={showAnswer} dangerouslySetInnerHTML={{__html: appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].answer}}></div>
         }
         else {
             quiz = "Invalid flashcard pointer"
         }
     } else {
         quiz = "Quiz does not exist"
+    }
+
+    function showAnswer() {
+        setState({
+            answerShown: !state.answerShown
+        })
     }
 
     function showHint() {
@@ -70,6 +79,7 @@ function Quiz(props) {
             }
             changeAppStateContext({
                 ...appContext,
+                answerShown: false,
                 quizes: [
                     ...appContext.quizes.slice(0, quizid),
                     {
@@ -78,6 +88,9 @@ function Quiz(props) {
                     },
                     ...appContext.quizes.slice(quizid+1)
                 ]
+            })
+            setState({
+                answerShown: false
             })
         }
     }
@@ -90,6 +103,7 @@ function Quiz(props) {
             }
             changeAppStateContext({
                 ...appContext,
+                answerShown: false,
                 quizes: [
                     ...appContext.quizes.slice(0, quizid),
                     {
@@ -98,6 +112,9 @@ function Quiz(props) {
                     },
                     ...appContext.quizes.slice(quizid+1)
                 ]
+            })
+            setState({
+                answerShown: false
             })
         }
     }

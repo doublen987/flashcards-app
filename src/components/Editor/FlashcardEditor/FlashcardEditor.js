@@ -4,6 +4,7 @@ import { getSubjectsMapFromFlashcards, arrayFromMap } from '../../util'
 import { useParams } from 'react-router-dom'
 import FlashCardEditorCSS from './FlashcardEditor.module.css'
 import UpdatableSelect from "./UpdatableSelect/UpdatableSelect";
+import ContentEditor from "./ContentEditor/ContentEditor";
 
 function FlashcardEditor(props) {
         let flashcardid = props.flashcardid;
@@ -75,7 +76,7 @@ function FlashcardEditor(props) {
             let position = -1;
             appContext.flashcards.forEach((flashcard) => {
                 if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
-                    position = stateflashcard.position;
+                    position = flashcard.position;
                 }
             })
 
@@ -179,7 +180,7 @@ function FlashcardEditor(props) {
                 </div>
                 <div className={FlashCardEditorCSS.inputcontainer}>
                     <label className={FlashCardEditorCSS.label}>Answer: </label>
-                    <textarea className={FlashCardEditorCSS.textarea}  onChange={changeFieldOnEvent("answer")} value={stateflashcard.answer}></textarea>
+                    <ContentEditor className={FlashCardEditorCSS.textarea}  onChange={changeField("answer")} value={stateflashcard.answer}></ContentEditor>
                 </div>
                 <div className={FlashCardEditorCSS.inputcontainer}>
                     <label className={FlashCardEditorCSS.label}>Subject: </label>
