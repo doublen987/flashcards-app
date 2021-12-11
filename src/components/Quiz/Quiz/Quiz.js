@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import {AppStateContext, ChangeAppStateContext} from '../../App'
 import QuizCSS from './Quiz.module.css'
 
@@ -8,6 +8,16 @@ function Quiz(props) {
     const appContext = useContext(AppStateContext);
     const changeAppStateContext = useContext(ChangeAppStateContext)
     const [state, setState] = useState({ answerShown: false })
+    const node = createRef()
+
+    const renderMath = () => {
+        window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, node.current]);
+    };
+
+    useEffect(() => {
+        
+        renderMath();
+    })
 
     let currentFlashcard = -1;
     if(appContext.quizes[quizid].currentFlashcard > -1 && appContext.quizes[quizid].currentFlashcard < appContext.quizes[quizid].flashcards.length) {
@@ -18,9 +28,9 @@ function Quiz(props) {
     if( appContext.quizes[quizid]) {
         if(currentFlashcard > -1) {
             if(!state.answerShown)
-                quiz = <div className={QuizCSS.slideshow} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
+                quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
             else 
-                quiz = <div className={QuizCSS.slideshow} onClick={showAnswer} dangerouslySetInnerHTML={{__html: appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].answer}}></div>
+                quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer} dangerouslySetInnerHTML={{__html: appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].answer}}></div>
         }
         else {
             quiz = "Invalid flashcard pointer"
