@@ -1,6 +1,11 @@
-.slideshowcontainer {
+.quizcontainer {
     display: inline-block;
     width: calc(100% - 300px);
+    margin: auto;
+}
+
+.slideshowcontainer {
+    width: 100%;
 }
 
 .hintcontainer {
@@ -39,6 +44,13 @@
     padding-left: 20px;
     padding-right: 20px;
     text-align: center;
+}
+
+.flashcardcounter {
+    position: relative;
+    margin: auto;
+    text-align: center;
+    font-size: 30px;
 }
 
 .btncontainer {

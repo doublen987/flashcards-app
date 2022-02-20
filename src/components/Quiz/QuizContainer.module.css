@@ -1,5 +1,6 @@
 
 .quizpage {
     display: inline-block;
+    height: calc(100% - 50px);
     width: 100%;
 }

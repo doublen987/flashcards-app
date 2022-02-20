@@ -28,7 +28,27 @@ function stringInitialized(value) {
 }
 
 function arrayFromMap(myMap) {
-    return Array.from(myMap.values())
+    if(myMap instanceof Array) {
+        return Array.from(myMap.map((element) => {
+            return arrayFromMap(element)
+        }))
+    }
+
+    if(myMap instanceof Map) {
+        return Array.from(myMap.entries()).map((element) => {
+            element[1].id = element[0]
+            return arrayFromMap(element[1])
+        })
+    }
+
+    if(myMap instanceof Object) {
+        let newObj = {}
+        for (const prop in myMap) {
+            newObj[prop] = arrayFromMap(myMap[prop])
+        }
+        return newObj;
+    }
+    return myMap;
 }
 
 function mapFromArray(myArray) {
@@ -36,6 +56,7 @@ function mapFromArray(myArray) {
     myArray.forEach(element => {
         newMap.set(element.id, element)
     })
+    console.log(newMap)
     return newMap
 }
 

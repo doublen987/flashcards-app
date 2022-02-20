@@ -5,6 +5,7 @@ import Quiz from "./Quiz/Quiz";
 import QuizEditor from "./QuizEditor/QuizEditor";
 import QuizCSS from './QuizContainer.module.css'
 import QuizList from "./QuizList/QuizList";
+import Aux from "../hoc/Aux";
 
 function QuizContainer() {
 
@@ -14,14 +15,17 @@ function QuizContainer() {
             
             <Switch>
                 <Route path={`${path}/:quizid`} render={(props) => (
-                    <div>
+                    <Aux>
                         <QuizList key={"quizlist-" + props.match.params.quizid} quizid={props.match.params.quizid}></QuizList>
                         <Quiz key={"quiz-" + props.match.params.quizid} quizid={props.match.params.quizid}></Quiz>
-                    </div>
+                    </Aux>
                 )}/>
                 <Route path={"/quiz"}>
-                    <QuizList></QuizList>
-                    <QuizEditor></QuizEditor>
+                    <Aux>
+                        <QuizList></QuizList>
+                        <QuizEditor></QuizEditor>
+                    </Aux>
+                    
                 </Route>
                 
             </Switch>

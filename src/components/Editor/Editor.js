@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { Switch, Route, useRouteMatch } from "react-router";
 import { AppStateContext } from "../App";
-import FlashcardList from "./FlashcardEditor/FlashcardList";
+import FlashcardList from "./QuestionsList/FlashcardList";
 import FlashcardEditor from "./FlashcardEditor/FlashcardEditor";
 import SetEditor from "./SetEditor/SetEditor";
 import SetList from "./SetEditor/SetList";
@@ -23,8 +23,8 @@ const Editor = function() {
                   let redirect = <Redirect to={`/editor`}></Redirect>;
                   if(appContext.flashcards.has(props.match.params.flashcardid))
                     redirect = <div>
-                        <FlashcardList key={"flashcardlist-"+props.match.params.flashcardid} flashcardid={props.match.params.flashcardid} flashcards={flashcards}></FlashcardList>
-                        <FlashcardEditor key={"flashcardeditor-" + props.match.params.flashcardid} flashcardid={props.match.params.flashcardid}></FlashcardEditor>
+                        <FlashcardList flashcardid={props.match.params.flashcardid} flashcards={flashcards}></FlashcardList>
+                        <FlashcardEditor flashcardid={props.match.params.flashcardid}></FlashcardEditor>
                     </div>;
                   return(
                       {...redirect}

@@ -1,6 +1,7 @@
 .list-container {
-    width: 300px;
-    height: 300px;
+    width: 370px;
+    height: 600px;
+    padding: 20px;
     overflow-y: scroll;
     display: inline-block;
     vertical-align: top;
@@ -21,16 +22,17 @@
     display: unset;
 }
 
-.setlabel{
-    width: 70%;
+.label{
+    width: 100%;
     color: #333e51;
     font-family: 'Roboto', sans-serif;
     padding: 0px 20px 0 20px;
+    font-size: 30px;
     background-color: #cad0d7;
     box-sizing: border-box;
     display: inline-block;
 }
-.setlabel:hover {
+.label:hover {
     background-color: steelblue;
     cursor: pointer;
 }
@@ -39,14 +41,6 @@
     width: 100%;
     background-color: cornflowerblue;
     color: white;
-}
-
-.ol {
-    padding-inline-start: 0px;
-}
-
-.li {
-    padding: 0 20px 0 20px;
 }
 
 .li::marker {
@@ -66,3 +60,29 @@
     background-color: steelblue;
     cursor: pointer;
 }
+
+.subjects-list {
+    list-style-type: none;
+}
+
+.chapters-list {
+    list-style-type: none;
+}
+
+.flashcard-list-item {
+    padding: 0 0 0 40px;
+}
+
+.questions-list {
+    list-style-type: none;
+}
+
+.flashcards-list-item {
+    padding-left: 40px;
+}
+
+.flashcard-list-item:hover {
+    cursor: pointer;
+    background-color: steelblue;
+}
+

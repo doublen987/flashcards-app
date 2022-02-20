@@ -4,6 +4,7 @@ import Editor from './Editor/Editor';
 import SetEditor from './Editor/SetEditor/SetEditor';
 import QuizContainer from './Quiz/QuizContainer';
 import Nav from './Nav';
+import Home from './Home/Home'
 import Footer from './Footer'
 import { arrayFromMap, mapFromArray } from './util';
 
@@ -16,6 +17,12 @@ var random = Date.now();
 
 
 let appInit = {
+    settings: {},
+    stats: {
+        chronologicalData: [
+            
+        ]
+    },
     bla: new Map([
         ["subject-"+random+1, {
             "id": 0,
@@ -193,35 +200,55 @@ let appInit = {
 }
 
 function App() {
-    //if(!localStorage.getItem("appState")) {
-    //    localStorage.setItem("appState", JSON.stringify(appInit))
-    //}
-    //saveState(appInit)
+    if(!localStorage.getItem("appState")) {
+       //localStorage.setItem("appState", JSON.stringify(appInit))
+       saveState(appInit)
+    }
+    
+    let tmpState = getState();
 
-    //let tmpState = JSON.parse(localStorage.getItem("appState"))
-    let tmpState = appInit
-    tmpState.flashcards = mapFromArray(tmpState.flashcards)
+    console.log(tmpState)
 
     const [appState, changeAppState] = useState(tmpState)
+
     console.log(appState)
 
+    function getState() {
+        let tmpState = JSON.parse(localStorage.getItem("appState"))
+        tmpState.flashcards = mapFromArray(tmpState.flashcards)
+        tmpState.subjects = mapFromArray(tmpState.subjects)
+        tmpState.subjects.forEach(subject => {
+            console.log(subject.chapters)
+            subject.chapters = mapFromArray(subject.chapters)
+        })
+        console.log(tmpState.subjects)
+        return tmpState
+    }
+
     function saveState(state) {
+        console.log(arrayFromMap(state.subjects))
+
+
         let tmpState = {
             ...state,
+            subjects: arrayFromMap(state.subjects),
             flashcards: arrayFromMap(state.flashcards)
         }
         localStorage.setItem("appState", JSON.stringify(tmpState))
     }
 
     function updateState(newState) {
-        saveState(newState)
+        console.log("updating state")
+        console.log(newState)
+        
         changeAppState(newState)
+        saveState(newState)
     }
 
     return (
         <AppStateContext.Provider value={appState}>
             <ChangeAppStateContext.Provider value={updateState}>
-                <div>
+                <div style={{height: "100%"}}>
                     <Router>
                         <Nav></Nav>
                         <Switch>
@@ -231,7 +258,9 @@ function App() {
                             <Route path="/quiz">
                                 <QuizContainer></QuizContainer>
                             </Route>
-                            
+                            <Route path="/">
+                                <Home></Home>
+                            </Route>
                         </Switch>
                     </Router>
                 </div>

@@ -40,6 +40,53 @@ function Quiz(props) {
     }
 
     function showAnswer() {
+        
+        
+        if(!appContext.quizes[quizid].flashcards[currentFlashcard].answered) {
+            let date = new Date(Date.now())
+            let year = date.getFullYear()
+            let month = date.getMonth() + 1
+            let day = date.getDate()
+            console.log("year: " + year + " month: " + month + " day: " + day)
+
+            let lastDay = appContext.stats.chronologicalData[appContext.stats.chronologicalData.length-1]
+            if(appContext.stats.chronologicalData.length != 0 && lastDay.day === day) {
+                lastDay.answered = lastDay.answered + 1
+            } else {
+                lastDay = {
+                    year: year,
+                    month: month,
+                    day: day,
+                    answered: 1
+                }
+                appContext.stats.chronologicalData.push(lastDay)
+            }
+        }
+
+        changeAppStateContext({
+            ...appContext,
+            stats: {
+                ...appContext,
+                chronologicalData: [
+                    ...appContext.stats.chronologicalData
+                ]
+            },
+            quizes: [
+                ...appContext.quizes.slice(0, quizid),
+                {
+                    ...appContext.quizes[quizid],
+                    flashcards: [
+                        ...appContext.quizes[quizid].flashcards.slice(0, currentFlashcard),
+                        {
+                            ...appContext.quizes[quizid].flashcards[currentFlashcard],
+                            answered: true
+                        },
+                        ...appContext.quizes[quizid].flashcards.slice(currentFlashcard+1),
+                    ]
+                },
+                ...appContext.quizes.slice(quizid + 1)
+            ]
+        })
         setState({
             answerShown: !state.answerShown
         })
@@ -143,8 +190,11 @@ function Quiz(props) {
     }
 
     return (
-        <div className={QuizCSS.slideshowcontainer}>
-            {quiz}    
+        <div className={QuizCSS.quizcontainer}>
+            <div className={QuizCSS.slideshowcontainer}>
+                {quiz}    
+                <div className={QuizCSS.flashcardcounter}>{(currentFlashcard+1) + "/" + appContext.quizes[quizid].flashcards.length}</div>
+            </div>
             <div className={QuizCSS.btncontainer}>
                 <button onClick={onPrevious()} className={QuizCSS.btnflashcard}>Previous</button>
                 <button onClick={showHint} className={QuizCSS.btnflashcard}>Hint</button>

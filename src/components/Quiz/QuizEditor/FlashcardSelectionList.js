@@ -364,61 +364,77 @@ const FlashcardSelectionList = function(props) {
         if(subjectName === "other") {
             subject.flashcards.forEach(flashcard => {
             chapters[flashcard.position] = (
-                <li key={'flashcard-list-item-'+flashcard.id} className={`${FlashcardSelectionListCSS.li}`}>
+                <div key={'flashcard-list-item-'+flashcard.id} className={`${FlashcardSelectionListCSS['flashcard-list-item']}`}>
                     <input 
                     onChange={onFlashcardCheckmarkChange(subjectName, null, flashcard.id )} 
                     type="checkbox" 
                     value={flashcard.id}
                     checked={flashcard.checked}></input>
+                    <span className={FlashcardSelectionListCSS['checkmark']}></span>
                     {flashcard.question}
-                </li>);
+                </div>);
             })
         } else {
             subject.chapters.forEach((chapter, chapterName) => {
                 chapters[chapter.position] = (
-                <li key={'chapter-'+subjectName+"-"+chapterName}>
+                <div key={'chapter-'+subjectName+"-"+chapterName} className={FlashcardSelectionListCSS["list"]} >
                     
                     <div 
                         key={'chapter-label-'+subjectName+"-"+chapterName} 
-                        className={FlashcardSelectionListCSS.setlabel} 
-                        onClick={onSelectChapter(subjectName, chapterName)}>
+                        className={FlashcardSelectionListCSS['label']} 
+                        onClick={onSelectChapter(subjectName, chapterName)}
+                        style={{paddingLeft: "40px"}}
+                        >
+                        
                         <input 
                             onChange={onChapterCheckmarkChange(subjectName, chapterName)} 
                             type="checkbox"
                             checked={chapter.checked}></input>
+                        <span className={FlashcardSelectionListCSS['checkmark']}></span>
                         {chapterName}
                     </div>
-                    <ul key={'chapter-contents-list-'+subjectName+"-"+chapterName} className={`${FlashcardSelectionListCSS.ol} ${
-                    chapter.selected? FlashcardSelectionListCSS.display_unset : FlashcardSelectionListCSS.display_none
-                    }`}>
-                    {chapter.flashcards.map(flashcard => {
-                        return (
-                        <li 
-                            key={'flashcard-list-item-'+flashcard.id} 
-                            className={`${FlashcardSelectionListCSS.li}`}>
-                                <input onChange={onFlashcardCheckmarkChange(subjectName, chapterName, flashcard.id)} type="checkbox" value={flashcard.id} checked={flashcard.checked}></input>
-                                {flashcard.question}
-                        </li>);
-                    })}
-                    </ul>
-                </li>)
+                    <div 
+                        key={'chapter-contents-list-'+subjectName+"-"+chapterName} 
+                        className={`
+                            ${FlashcardSelectionListCSS["questions-list"]} 
+                            ${chapter.selected? FlashcardSelectionListCSS.display_unset : FlashcardSelectionListCSS.display_none}
+                        `}
+                    >
+                        {chapter.flashcards.map(flashcard => {
+                            return (
+                            <div 
+                                key={'flashcard-list-item-'+flashcard.id} 
+                                style={{paddingLeft: "60px"}}
+                                className={`${FlashcardSelectionListCSS['flashcard-list-item']}`}>
+                                    <input onChange={onFlashcardCheckmarkChange(subjectName, chapterName, flashcard.id)} type="checkbox" value={flashcard.id} checked={flashcard.checked}></input>
+                                    <span className={FlashcardSelectionListCSS['checkmark']}></span>
+                                    {flashcard.question}
+                            </div>);
+                        })}
+                    </div>
+                </div>)
             })
         }
         
 
         list.push(
-            <li key={'subject-list-item-'+subjectName}>
-                <input 
-                    onChange={onSubjectCheckmarkChange(subjectName)} 
-                    type="checkbox" 
-                    checked={subject.checked}></input>
-                <div key={'subject-label-'+subjectName} className={FlashcardSelectionListCSS.setlabel} onClick={onSelectSubject(subjectName)}>{subjectName}</div>
-                <ol key={'subject-contents-list-'+subjectName} className={`${FlashcardSelectionListCSS.ol} ${
+            <div key={'subject-list-item-'+subjectName} className={FlashcardSelectionListCSS["list"]}>
+                
+                <div key={'subject-label-'+subjectName} className={FlashcardSelectionListCSS['label']} onClick={onSelectSubject(subjectName)}>
+                    <span className={FlashcardSelectionListCSS['checkmark']}></span>
+                    <input 
+                        onChange={onSubjectCheckmarkChange(subjectName)} 
+                        type="checkbox" 
+                        checked={subject.checked}>
+                    </input>
+                    {subjectName}
+                </div>
+                <div key={'subject-contents-list-'+subjectName} className={`${FlashcardSelectionListCSS['chapters-list']} ${
                     subject.selected? FlashcardSelectionListCSS.display_unset : FlashcardSelectionListCSS.display_none
                     }`}>
                     {chapters}
-                </ol>
-            </li>
+                </div>
+            </div>
         )
         
         
@@ -426,9 +442,9 @@ const FlashcardSelectionList = function(props) {
 
     return (
         <div className={FlashcardSelectionListCSS["list-container"]} >
-            <ul>
+            <div className={FlashcardSelectionListCSS["subjects-list"]}>
             {list}
-            </ul>
+            </div>
         </div>
     );
 }

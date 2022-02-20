@@ -1,10 +1,10 @@
-import React, { Component, useContext } from "react";
+import React, { Component, useContext, useEffect } from "react";
 import { ChangeAppStateContext, AppStateContext } from '../../App'
-import { getSubjectsMapFromFlashcards, arrayFromMap } from '../../util'
+import { getSubjectsMapFromFlashcards, arrayFromMap, mapFromArray } from '../../util'
 import { useParams } from 'react-router-dom'
 import FlashCardEditorCSS from './FlashcardEditor.module.css'
-import UpdatableSelect from "./UpdatableSelect/UpdatableSelect";
-import ContentEditor from "./ContentEditor/ContentEditor";
+import UpdatableSelect from "../UpdatableSelect/UpdatableSelect";
+import ContentEditor from "../ContentEditor/ContentEditor";
 
 function FlashcardEditor(props) {
         let flashcardid = props.flashcardid;
@@ -26,7 +26,6 @@ function FlashcardEditor(props) {
         const subjectsMap =  getSubjectsMapFromFlashcards(flashcards)
         
         const [stateflashcard, setFlashcard] = React.useState(function getInitialState() {
-                console.log(flashcardid)
                 for(let j = 0; j < flashcards.length; j++) {
                     if(flashcards[j].id === flashcardid) {
                         return {
@@ -41,6 +40,17 @@ function FlashcardEditor(props) {
             
         })
 
+        useEffect(() => {
+            let newflashcard = flashcards.find(flashcard => flashcard.id === props.flashcardid)
+            if(props.flashcardid && newflashcard) {
+                setFlashcard(newflashcard)
+            } else {
+                setFlashcard(baseflashcard)
+            }
+        }, [props.flashcardid])
+
+
+        //Get all available subjects and chapters from the subjects map
         let subjects = Array.from(subjectsMap.keys())
         let chapters = []
         if(subjectsMap.has(stateflashcard.subject))
@@ -49,7 +59,15 @@ function FlashcardEditor(props) {
         function addFlashcard() {
             let newid = ""+Date.now()
 
-            let subjects = new Map(appContext.subjects) 
+            let subjects = new Map(appContext.subjects)
+            subjects.forEach(subject => {
+                console.log(subject.chapters)
+                subject.chapters = mapFromArray(subject.chapters)
+            })
+            // let bla = new Map(mapFromArray(subjects.get("Matematika 2").chapters))
+            // console.log(bla)
+            // subjects.set("Matematika 2", {...subjects.get("Matematika 2"), chapters: bla} )
+            
             if(stateflashcard.subject !== "") {
                 if(subjects.has(stateflashcard.subject)) {
                     let subject = subjects.get(stateflashcard.subject)
@@ -80,9 +98,10 @@ function FlashcardEditor(props) {
                 }
             })
 
+            console.log(appContext)
+
             changeAppStateContext({
                 ...appContext,
-                subjects: subjects,
                 flashcards: new Map(
                     appContext.flashcards.set(newid, {
                         ...stateflashcard,

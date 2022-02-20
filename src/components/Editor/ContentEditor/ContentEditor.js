@@ -159,35 +159,35 @@ function ContentEditor(props) {
     return (
         <>
         <Editor
-        onInit={(evt, editor) => editorRef.current = editor}
-        //initialValue="<p>This is the initial content of the editor.</p>"
-        onEditorChange={props.onChange}
-        value={props.value}
-        init={{
-          height: 500,
-          menubar: false,
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks codesample fullscreen',
-            'insertdatetime media table paste codesample help wordcount tiny_mce_wiris'
-          ],
-          toolbar: 'undo redo | formatselect | ' +
-          'bold italic backcolor | alignleft aligncenter ' +
-          'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat | help | image | codesample |' +
-          'tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
-          skin: false,
-          content_css: false,
-          content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
-        //   external_plugins: {
-        //     'tiny_mce_wiris': `../node_modules/@wiris/mathtype-tinymce5/plugin.min.js`,
-        //   },
-          htmlAllowedTags: ['.*'],
-          htmlAllowedAttrs: ['.*'],
-          draggable_modal: true,
+            onInit={(evt, editor) => editorRef.current = editor}
+            //initialValue="<p>This is the initial content of the editor.</p>"
+            onEditorChange={props.onChange}
+            value={props.value}
+            init={{
+            height: 500,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks codesample fullscreen',
+                'insertdatetime media table paste codesample help wordcount tiny_mce_wiris'
+            ],
+            toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help | image | codesample |' +
+            'tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
+            skin: false,
+            content_css: false,
+            content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
+            //   external_plugins: {
+            //     'tiny_mce_wiris': `../node_modules/@wiris/mathtype-tinymce5/plugin.min.js`,
+            //   },
+            htmlAllowedTags: ['.*'],
+            htmlAllowedAttrs: ['.*'],
+            draggable_modal: true,
 
-        }}
-      />
+            }}
+        />
       {/* <button onClick={log}>Log editor content</button> */}
       </>)
 }

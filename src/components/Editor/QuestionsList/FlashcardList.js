@@ -340,6 +340,17 @@ const FlashcardList = function(props) {
     return (
         <div className={FlashCardListCSS["list-container"]} >
             {list}
+            <Link 
+                style={{textDecoration: "none"}}
+                key={'link-new-question'} 
+                to={`/editor`}>
+                    <div
+                     className={`${!props.flashcardid? 
+                        FlashCardListCSS['newquiz-selected']: 
+                        FlashCardListCSS["newquiz"]}`}
+                    >Create new question!</div>
+            </Link>
+
         </div>
         
     );
