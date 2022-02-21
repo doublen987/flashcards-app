@@ -82,12 +82,20 @@ function FlashcardEditor(props) {
                 } else {
                     subjects.set(stateflashcard.subject, {
                         name: stateflashcard.subject,
-                        chapters: new Map([["Other", {
+                        chapters: new Map([["other", {
                             subject: stateflashcard.subject,
                             position: 0,
-                            name: "Other"
+                            name: "other"
                         }]])
                     })
+                    if(stateflashcard.chapter != "" && stateflashcard.chapter != null) {
+                        let subject = subjects.get(stateflashcard.subject)
+                        subject.chapters.set(stateflashcard.chapter, {
+                            subject: stateflashcard.subject,
+                            position: subject.chapters.size,
+                            name: stateflashcard.chapter
+                        })
+                    }
                 }
             } 
 
@@ -102,6 +110,7 @@ function FlashcardEditor(props) {
 
             changeAppStateContext({
                 ...appContext,
+                subjects: subjects,
                 flashcards: new Map(
                     appContext.flashcards.set(newid, {
                         ...stateflashcard,
@@ -115,8 +124,52 @@ function FlashcardEditor(props) {
 
         function updateFlashcard() {
 
+            let subjects = new Map(appContext.subjects)
+            subjects.forEach(subject => {
+                console.log(subject.chapters)
+                subject.chapters = mapFromArray(subject.chapters)
+            })
+            if(stateflashcard.subject !== "") {
+                if(subjects.has(stateflashcard.subject)) {
+                    let subject = subjects.get(stateflashcard.subject)
+                    if(!subject.chapters.has(stateflashcard.chapter)) {
+                        
+                        subject.chapters.set(stateflashcard.chapter, {
+                            subject: stateflashcard.subject,
+                            position: subject.chapters.size,
+                            name: stateflashcard.chapter
+                        })
+                    } 
+                } else {
+                    subjects.set(stateflashcard.subject, {
+                        name: stateflashcard.subject,
+                        chapters: new Map([["other", {
+                            subject: stateflashcard.subject,
+                            position: 0,
+                            name: "other"
+                        }]])
+                    })
+                    if(stateflashcard.chapter != "" && stateflashcard.chapter != null) {
+                        let subject = subjects.get(stateflashcard.subject)
+                        subject.chapters.set(stateflashcard.chapter, {
+                            subject: stateflashcard.subject,
+                            position: subject.chapters.size,
+                            name: stateflashcard.chapter
+                        })
+                    }
+                }
+            } 
+
+            let position = -1;
+            appContext.flashcards.forEach((flashcard) => {
+                if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
+                    position = flashcard.position;
+                }
+            })
+
             changeAppStateContext({
                 ...appContext,
+                subjects: subjects,
                 flashcards: new Map(
                     appContext.flashcards.set(flashcardid,stateflashcard)
                 )

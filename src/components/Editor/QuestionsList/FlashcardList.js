@@ -246,13 +246,13 @@ const FlashcardList = function(props) {
                     <SortableItem 
                         key={`sortable-other-flashcard-${index}`} 
                         index={index}
-                        className={`${FlashCardListCSS["li"]}`}
+                        className={`${FlashCardListCSS["flashcardli"]}
+                                                ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}
                     >
                         <Link 
                         key={'flashcard-link-'+flashcard.id} 
-                        className={`${flashcard.id===state.selectedFlashcard? 
-                            FlashCardListCSS['flashcardlink-selected']: 
-                            FlashCardListCSS["flashcardlink"]}`}  
+                        className={`${FlashCardListCSS["flashcardlink"]}  
+                                                    ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`} 
                         to={`/editor/flashcard/${flashcard.id}`}>
                             {(index+1) + ". " +flashcard.question}
                         </Link>

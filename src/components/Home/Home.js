@@ -21,6 +21,14 @@ function Home() {
             }
         })
 
+        // function downloadState() {
+        //     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storageObj));
+        //     var dlAnchorElem = document.getElementById('downloadAnchorElem');
+        //     dlAnchorElem.setAttribute("href",     dataStr     );
+        //     dlAnchorElem.setAttribute("download", "scene.json");
+        //     dlAnchorElem.click();
+        // }
+
         function changeTimeChart(monthChange) {
             return () => {
                 let year = state.timeChart.year
@@ -126,12 +134,18 @@ function Home() {
 
         return (
         <div style={{textAlign: "center"}}>
-        <div style={{width: "400px", margin: "auto"}}>
+            <div style={{width: "400px", margin: "auto"}}>
            
             <canvas id="myChart" width="400" height="400"></canvas>
             </div>
             <button onClick={changeTimeChart(-1)}>Prev</button>
             <button onClick={changeTimeChart(1)}>Next</button>
+            <div>
+                <a 
+                href={"data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage.getItem("appState")))}
+                download={"scene.json"}
+                >Download state</a>
+            </div>
         </div>);
         
 }
