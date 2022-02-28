@@ -130,6 +130,14 @@ function Home() {
 
         }, [])
 
+        function download(content, fileName, contentType) {
+            var a = document.createElement("a");
+            var file = new Blob([content], {type: contentType});
+            a.href = URL.createObjectURL(file);
+            a.download = fileName;
+            a.click();
+        }
+
 
 
         return (
@@ -141,10 +149,13 @@ function Home() {
             <button onClick={changeTimeChart(-1)}>Prev</button>
             <button onClick={changeTimeChart(1)}>Next</button>
             <div>
-                <a 
+                {/* <a 
                 href={"data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage.getItem("appState")))}
                 download={"scene.json"}
-                >Download state</a>
+                >Download state</a> */}
+                <button onClick={() => { download(localStorage.getItem("appState"), "scene.json", "text/plain")}}>
+                    Download state
+                </button>
             </div>
         </div>);
         

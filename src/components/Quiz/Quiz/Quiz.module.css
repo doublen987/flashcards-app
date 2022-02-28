@@ -39,11 +39,17 @@
     justify-content: center;
     align-items: center;
     border-radius: 3%;
-    font-size: 50px;
+    font-size: 20px;
     margin-top: 40px;
     padding-left: 20px;
     padding-right: 20px;
+    overflow-y: scroll;
+}
+
+.slideshowQuestion {
+    font-size: 40px;
     text-align: center;
+    overflow-y: hidden;
 }
 
 .flashcardcounter {

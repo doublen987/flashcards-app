@@ -28,7 +28,7 @@ function Quiz(props) {
     if( appContext.quizes[quizid]) {
         if(currentFlashcard > -1) {
             if(!state.answerShown)
-                quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
+                quiz = <div ref={node} className={QuizCSS.slideshow + " " + QuizCSS.slideshowQuestion} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
             else 
                 quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer} dangerouslySetInnerHTML={{__html: appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].answer}}></div>
         }
@@ -66,7 +66,7 @@ function Quiz(props) {
         changeAppStateContext({
             ...appContext,
             stats: {
-                ...appContext,
+                ...appContext.stats,
                 chronologicalData: [
                     ...appContext.stats.chronologicalData
                 ]
