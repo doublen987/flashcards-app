@@ -108,6 +108,25 @@ function FlashcardEditor(props) {
 
             console.log(appContext)
 
+            let newQuizes = appContext.quizes.map(quiz => {
+                let addToQuiz = false;
+                quiz.subjects.forEach(subject => {
+                    if(subject.id === stateflashcard.subject) {
+                        addToQuiz = true;
+                    }
+                })
+                quiz.chapters.forEach(chapter => {
+                    if(chapter.subject == stateflashcard.subject && chapter.id == stateflashcard.chapter) {
+                        addToQuiz = true;
+                    }
+                })
+
+                if(addToQuiz) {
+                    quiz.flashcards.push(stateflashcard)
+                }
+                return quiz;
+            })
+
             changeAppStateContext({
                 ...appContext,
                 subjects: subjects,
@@ -117,7 +136,8 @@ function FlashcardEditor(props) {
                         position: position + 1,
                         id: newid
                     })
-                )
+                ),
+                quizes: newQuizes
             })
             setFlashcard(baseflashcard)
         }

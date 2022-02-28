@@ -60,4 +60,5 @@ function mapFromArray(myArray) {
     return newMap
 }
 
+
 export { getSubjectsMapFromFlashcards, stringInitialized, arrayFromMap, mapFromArray };

@@ -70,6 +70,18 @@ function QuizEditor(props) {
 
 
         function addQuiz() {
+            let newSubjects = [];
+            let newChapters = [];
+
+            quizState.subjects.forEach((subject, subjectName) => {
+                if(subject.selected) 
+                    newSubjects.push({id: subjectName})
+                subject.chapters.forEach((chapter, chapterName) => {
+                    if(chapter.selected)
+                        newChapters.push({id: chapterName, subject: subjectName})
+                })
+            })
+
             changeAppContext({
                 ...appContext,
                 quizes: [
@@ -77,7 +89,9 @@ function QuizEditor(props) {
                     {
                         ...quizState,
                         id: appContext.quizes.length,
-                        flashcards: shuffleFlashcards(quizState.shuffletype, mapToArray(quizState.subjects))
+                        flashcards: shuffleFlashcards(quizState.shuffletype, mapToArray(quizState.subjects)),
+                        subjects: newSubjects,
+                        chapters: newChapters
                     }
                 ]
             })

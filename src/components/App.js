@@ -181,6 +181,24 @@ let appInit = {
                     question: "Dovoljna statistika?",
                     answer: "Dovoljna statistika je ona koji ima sve informacije iz originalne statistike"
                 }
+            ],
+            subjects: [
+                {
+                    id: "Statistika"
+                },
+                {
+                    id: "Matematika 2"
+                }
+            ],
+            chapters: [
+                {
+                    id: "Srednja vrednost",
+                    subject: "Matematika 2"
+                },
+                {
+                    id: "Dovoljnost statistika",
+                    subject: "Statistika"
+                }
             ]
         },
         {
@@ -193,6 +211,17 @@ let appInit = {
                     id: 0,
                     question: "Dovoljna statistika?",
                     answer: "Dovoljna statistika je ona koji ima sve informacije iz originalne statistike"
+                }
+            ],
+            subjects: [
+                { 
+                    id: "Statistika"
+                }
+            ],
+            chapters: [
+                {
+                    id: "Dovoljnost statistika",
+                    subject: "Statistika"
                 }
             ]
         }
