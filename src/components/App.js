@@ -236,11 +236,8 @@ function App() {
     
     let tmpState = getState();
 
-    console.log(tmpState)
-
     const [appState, changeAppState] = useState(tmpState)
 
-    console.log(appState)
 
     function getState() {
         let tmpState = JSON.parse(localStorage.getItem("appState"))
