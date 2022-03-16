@@ -73,6 +73,9 @@ function QuizEditor(props) {
             let newSubjects = [];
             let newChapters = [];
 
+            console.log(quizState.subjects)
+            console.log(mapToArray(quizState.subjects))
+
             quizState.subjects.forEach((subject, subjectName) => {
                 if(subject.selected) 
                     newSubjects.push({id: subjectName})

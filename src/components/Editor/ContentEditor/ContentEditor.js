@@ -9,6 +9,7 @@ import 'tinymce/skins/ui/oxide/skin.css';
 import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
+import "tinymce/plugins/code"
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/link';
@@ -168,14 +169,14 @@ function ContentEditor(props) {
             menubar: false,
             plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks codesample fullscreen',
+                'searchreplace visualblocks codesample fullscreen code',
                 'insertdatetime media table paste codesample help wordcount tiny_mce_wiris'
             ],
             toolbar: 'undo redo | formatselect | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
             'removeformat | help | image | codesample |' +
-            'tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
+            'tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry | code',
             skin: false,
             content_css: false,
             content_style: contentUiCss.toString() + '\n' + contentCss.toString(),

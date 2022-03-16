@@ -75,7 +75,7 @@ function FlashcardEditor(props) {
                         
                         subject.chapters.set(stateflashcard.chapter, {
                             subject: stateflashcard.subject,
-                            position: chapters.size,
+                            position: subject.chapters.size,
                             name: stateflashcard.chapter
                         })
                     } 
@@ -101,14 +101,16 @@ function FlashcardEditor(props) {
 
             let position = -1;
             appContext.flashcards.forEach((flashcard) => {
-                if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
+                if(flashcard.subject == stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
                     position = flashcard.position;
                 }
             })
 
+            console.log(position)
             console.log(appContext)
 
-            let newQuizes = appContext.quizes.map(quiz => {
+            let newQuizes = appContext.quizes
+            newQuizes.forEach(quiz => {
                 let addToQuiz = false;
                 quiz.subjects.forEach(subject => {
                     if(subject.id === stateflashcard.subject) {
@@ -122,10 +124,14 @@ function FlashcardEditor(props) {
                 })
 
                 if(addToQuiz) {
-                    quiz.flashcards.push(stateflashcard)
+                    quiz.flashcards.push({
+                        ...stateflashcard,
+                        answered: false,
+                    })
                 }
-                return quiz;
             })
+
+            console.log(newQuizes)
 
             changeAppStateContext({
                 ...appContext,
@@ -180,12 +186,19 @@ function FlashcardEditor(props) {
                 }
             } 
 
-            let position = -1;
-            appContext.flashcards.forEach((flashcard) => {
-                if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
-                    position = flashcard.position;
-                }
-            })
+            
+
+            let flashcard = appContext.flashcards.get(flashcardid)
+            if(stateflashcard.subject != flashcard.subject || stateflashcard.chapter != flashcard.chapter) {
+                let position = -1;
+                appContext.flashcards.forEach((flashcard) => {
+                    if(flashcard.subject === stateflashcard.subject && flashcard.chapter == stateflashcard.chapter && position < flashcard.position) {
+                        position = flashcard.position;
+                    }
+                })
+                stateflashcard.position = position
+            }
+            
 
             changeAppStateContext({
                 ...appContext,
