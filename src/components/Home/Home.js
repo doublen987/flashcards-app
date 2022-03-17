@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 
 import { AppStateContext, ChangeAppStateContext } from "../App";
 
+import { getState } from "../util";
+
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
   
@@ -138,7 +140,26 @@ function Home() {
             a.click();
         }
 
-
+        function upload() {
+            var files = document.getElementById('selectFiles').files;
+          console.log(files);
+          if (files.length <= 0) {
+            return false;
+          }
+        
+          var fr = new FileReader();
+        
+          fr.onload = function(e) { 
+            console.log(e);
+            var result = JSON.parse(e.target.result);
+            var formatted = JSON.stringify(result, null, 2);
+            //document.getElementById('result').value = formatted;
+            console.log(result)
+            changeAppStateContext(getState(result))
+          }
+        
+          fr.readAsText(files.item(0));
+        };
 
         return (
         <div style={{textAlign: "center"}}>
@@ -157,6 +178,11 @@ function Home() {
                     Download state
                 </button>
             </div>
+            <div>
+                <input type="file" id="selectFiles"/><br />
+                <button id="import" onClick={upload}>Import</button>
+            </div>
+        
         </div>);
         
 }

@@ -60,5 +60,16 @@ function mapFromArray(myArray) {
     return newMap
 }
 
+function getState(tmpState) {
+    tmpState.flashcards = mapFromArray(tmpState.flashcards)
+    tmpState.subjects = mapFromArray(tmpState.subjects)
+    tmpState.subjects.forEach(subject => {
+        console.log(subject.chapters)
+        subject.chapters = mapFromArray(subject.chapters)
+    })
+    console.log(tmpState.subjects)
+    return tmpState
+}
 
-export { getSubjectsMapFromFlashcards, stringInitialized, arrayFromMap, mapFromArray };
+
+export { getSubjectsMapFromFlashcards, stringInitialized, arrayFromMap, mapFromArray, getState };

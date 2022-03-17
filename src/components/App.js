@@ -6,7 +6,7 @@ import QuizContainer from './Quiz/QuizContainer';
 import Nav from './Nav';
 import Home from './Home/Home'
 import Footer from './Footer'
-import { arrayFromMap, mapFromArray } from './util';
+import { arrayFromMap, mapFromArray, getState } from './util';
 
 export const AppStateContext = React.createContext()
 export const ChangeAppStateContext = React.createContext();
@@ -234,22 +234,10 @@ function App() {
        saveState(appInit)
     }
     
-    let tmpState = getState();
+    let lsState = JSON.parse(localStorage.getItem("appState"))
+    let tmpState = getState(lsState);
 
     const [appState, changeAppState] = useState(tmpState)
-
-
-    function getState() {
-        let tmpState = JSON.parse(localStorage.getItem("appState"))
-        tmpState.flashcards = mapFromArray(tmpState.flashcards)
-        tmpState.subjects = mapFromArray(tmpState.subjects)
-        tmpState.subjects.forEach(subject => {
-            console.log(subject.chapters)
-            subject.chapters = mapFromArray(subject.chapters)
-        })
-        console.log(tmpState.subjects)
-        return tmpState
-    }
 
     function saveState(state) {
         console.log(arrayFromMap(state.subjects))
