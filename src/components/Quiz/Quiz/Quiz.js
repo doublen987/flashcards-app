@@ -1,4 +1,5 @@
 import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
+import * as ReactDOMServer from 'react-dom/server';
 import {AppStateContext, ChangeAppStateContext} from '../../App'
 import QuizCSS from './Quiz.module.css'
 
@@ -29,9 +30,31 @@ function Quiz(props) {
         if(currentFlashcard > -1) {
             if(!state.answerShown)
                 quiz = <div ref={node} className={QuizCSS.slideshow + " " + QuizCSS.slideshowQuestion} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
-            else 
-                quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer} dangerouslySetInnerHTML={{__html: appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].answer}}></div>
-        }
+            else {
+                let currentquiz = appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard]
+                let answer = <div>
+                                <div className={QuizCSS.quizsubject}>
+                                    {currentquiz.subject}
+                                </div>
+                                <div className={QuizCSS.quizchapter}>
+                                    {currentquiz.chapter}
+                                </div>
+                                {currentquiz.answer}
+                            </div>;
+                quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer}>
+                    <div className={QuizCSS.quizsubject}>
+                        {currentquiz.subject}
+                    </div>
+                    <div className={QuizCSS.quizchapter}>
+                        {currentquiz.chapter}
+                    </div>
+                    <div className={QuizCSS.quizchapter}>
+                        {"position:" + currentquiz.position}
+                    </div>
+                    <div dangerouslySetInnerHTML={{__html: currentquiz.answer}}></div>
+                </div>
+            }
+       }
         else {
             quiz = "Invalid flashcard pointer"
         }
