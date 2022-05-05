@@ -7,12 +7,12 @@ import { arrayFromMap, functionGetSubjectsMapFromFlashcards, stringInitialized }
 import {sortableContainer, sortableElement, SortableHandle} from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
 import Aux from "../../hoc/Aux";
-import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 
-const FlashcardList = function(props) {
+const ExpandableListItem = function(props) {
     
     const appContext = useContext(AppStateContext)
     const changeAppStateContext = useContext(ChangeAppStateContext)
@@ -239,6 +239,8 @@ const FlashcardList = function(props) {
     let list = []
     let otherSubject = null;
     state.subjects.forEach((subject, subjectName) => {
+        
+        
 
         let chapters = [];
         
@@ -247,7 +249,6 @@ const FlashcardList = function(props) {
         } else {
             let chapterIndex = 0;
             subject.chapters.forEach((chapter, chapterName) => {
-                const DragHandleChapter = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={chapter.selected? faSortDown: faBars}/>);
                 chapters[chapter.position] = (
                 //Chapters
                     <SortableItem 
@@ -256,10 +257,10 @@ const FlashcardList = function(props) {
                         className={FlashCardListCSS["chapterlistitem"]}
                     >
                         <div 
-                            className={chapter.selected? FlashCardListCSS["chapter-label-selected"] : FlashCardListCSS["chapter-label"]} 
+                            className={FlashCardListCSS["label"]} 
                             key={'chapter-label-'+subjectName+"-"+chapterName} 
                             onClick={onSelectChapter(subjectName, chapterName)}>
-                                <DragHandleChapter></DragHandleChapter>{(chapter.position+1) + ". " + chapterName}
+                                <DragHandle></DragHandle>{(chapter.position+1) + ". " + chapterName}
                         </div>
                         {/* Flashcards */}
                         <SortableContainer useDragHandle
@@ -292,33 +293,34 @@ const FlashcardList = function(props) {
                 )
                 chapterIndex++;
             })
-            list.push(
-                //Subjects
-                <li 
-                    className={FlashCardListCSS["subjectlistitem"]} 
-                    key={'subject-list-item-'+subjectName}
-                >
-                    <div 
-                        className={FlashCardListCSS["label"]}
-                        key={'subject-label-'+subjectName}  
-                        onClick={onSelectSubject(subjectName)}
-                    >
-                        {subjectName}
-                    </div>
-                    <SortableContainer  useDragHandle
-                        className={`${FlashCardListCSS["ol"]} 
-                                    ${subject.selected? FlashCardListCSS["display_unset"] : 
-                                                        FlashCardListCSS["display_none"]}`}
-                        key={'subject-contents-list-'+subjectName} 
-                        onSortEnd={onChangeOrderChapter(subjectName)}
-                    >
-                        {chapters}
-                    </SortableContainer>
-                </li>
-            
-            )
         }
-
+        
+        list.push(
+            //Subjects
+            <li 
+                className={FlashCardListCSS["subjectlistitem"]} 
+                key={'subject-list-item-'+subjectName}
+            >
+                <div 
+                    className={FlashCardListCSS["label"]}
+                    key={'subject-label-'+subjectName}  
+                    onClick={onSelectSubject(subjectName)}
+                >
+                    {subjectName}
+                </div>
+                <SortableContainer  useDragHandle
+                    className={`${FlashCardListCSS["ol"]} 
+                                ${subject.selected? FlashCardListCSS["display_unset"] : 
+                                                    FlashCardListCSS["display_none"]}`}
+                    key={'subject-contents-list-'+subjectName} 
+                    onSortEnd={onChangeOrderChapter(subjectName)}
+                >
+                    {chapters}
+                </SortableContainer>
+            </li>
+        
+        )
+        
         
     })
 
@@ -357,7 +359,7 @@ const FlashcardList = function(props) {
             </div>
             <SortableContainer  useDragHandle
                 className={`${FlashCardListCSS["ol"]} 
-                            ${otherSubject.selected? FlashCardListCSS["display_unset"] : 
+                            ${subject.selected? FlashCardListCSS["display_unset"] : 
                                                 FlashCardListCSS["display_none"]}`}
                 key={'subject-contents-list-'+"other"} 
                 onSortEnd={onChangeOrderChapter("other")}
@@ -386,4 +388,4 @@ const FlashcardList = function(props) {
     );
 }
 
-export default FlashcardList;
+export default ExpandableListItem;

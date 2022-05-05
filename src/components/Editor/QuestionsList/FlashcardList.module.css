@@ -39,7 +39,8 @@
     width: 100%;
     color: #333e51;
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: bold;
     padding: 0px 20px 0 20px;
     background-color: #cad0d7;
     box-sizing: border-box;
@@ -47,8 +48,41 @@
     align-items: center;
 }
 .label:hover {
+    background-color: #333e51;
+    color: #cad0d7;
+    cursor: pointer;
+}
+
+.chapter-label{
+    width: 100%;
+    color: #333e51;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    padding: 0px 20px 0 20px;
+    background-color: #cad0d7;
+    box-sizing: border-box;
+    display : flex;
+    align-items: center;
+}
+
+.chapter-label:hover {
     background-color: steelblue;
     cursor: pointer;
+}
+
+.chapter-label-selected {
+    width: 100%;
+    color: #333e51;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0px 20px 0 20px;
+    padding-left: 25px;
+    background-color: #a4a9ae;
+    box-sizing: border-box;
+    display : flex;
+    align-items: center;
 }
 
 .flashcard-container {
@@ -73,29 +107,32 @@
 
 .flashcardli {
     color: #333e51;
+    background-color: #a4a9ae;
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
-    padding-left: 30px;
+    font-size: 15px;
+    padding-left: 40px;
 }
 
 .flashcardli-selected{
     background-color: #333e51;
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     color: #d2ac34;
 }
 
 .flashcardli:hover {
-    background-color: steelblue;
+    background-color: #333e51;
+    color: steelblue;
     cursor: pointer;
 }
 
 .flashcardlink {
-    color: #333e51;
+    color: inherit;
     text-decoration: none;
 }
+
 
 .flashcardlink-selected {
     color: #d2ac34;
