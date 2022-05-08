@@ -7,13 +7,13 @@ import FlashcardEditor from "./FlashcardEditor/FlashcardEditor";
 import SetEditor from "./SetEditor/SetEditor";
 import SetList from "./SetEditor/SetList";
 import { Redirect } from "react-router-dom";
-import {arrayFromMap} from '../util'
+import {arrayFromMap, findFlashcardByIndex} from '../util'
 
 const Editor = function() {
     
     let {path, url} = useRouteMatch();
     const appContext = useContext(AppStateContext);
-    let flashcards = arrayFromMap(appContext.flashcards)
+    let flashcards = appContext.subjects
 
     return (<div>
             <Switch>
@@ -21,7 +21,8 @@ const Editor = function() {
                   console.log(props.match.params.flashcardid)
                   
                   let redirect = <Redirect to={`/editor`}></Redirect>;
-                  if(appContext.flashcards.has(props.match.params.flashcardid))
+                 // console.log(findFlashcardByIndex(appContext.subjects, props.match.params.flashcardid))
+                  if(findFlashcardByIndex(appContext.subjects, props.match.params.flashcardid))
                     redirect = <div>
                         <FlashcardList flashcardid={props.match.params.flashcardid} flashcards={flashcards}></FlashcardList>
                         <FlashcardEditor flashcardid={props.match.params.flashcardid}></FlashcardEditor>

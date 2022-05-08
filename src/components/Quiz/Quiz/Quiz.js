@@ -48,9 +48,6 @@ function Quiz(props) {
                     <div className={QuizCSS.quizchapter}>
                         {currentquiz.chapter}
                     </div>
-                    <div className={QuizCSS.quizchapter}>
-                        {"position:" + currentquiz.position}
-                    </div>
                     <div dangerouslySetInnerHTML={{__html: currentquiz.answer}}></div>
                 </div>
             }

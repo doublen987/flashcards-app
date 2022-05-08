@@ -3,8 +3,8 @@ import { useState, useContext, useEffect } from "react";
 import { AppStateContext, ChangeAppStateContext } from "../../App";
 import { Link } from "react-router-dom";
 import FlashCardListCSS from './FlashcardList.module.css'
-import { arrayFromMap, functionGetSubjectsMapFromFlashcards, stringInitialized } from '../../util'
-import {sortableContainer, sortableElement, SortableHandle} from 'react-sortable-hoc';
+import { arrayFromMap, findNode, functionGetSubjectsMapFromFlashcards, setChapter, setFlashcard, setSubject, stringInitialized, treeFromArray } from '../../util'
+import {arrayMove, sortableContainer, sortableElement, SortableHandle} from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
 import Aux from "../../hoc/Aux";
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons'
@@ -32,10 +32,10 @@ const FlashcardList = function(props) {
             //If the flashcard doesnt have a subject add it to the "other" subtree
             if(!stringInitialized(flashcard.subject)) {
                 let tmpflashcards = subjectsMap.get("other").flashcards
-                tmpflashcards[flashcard.position] = {
+                tmpflashcards.push({
                     ...flashcard,
                     selected: selected
-                }
+                })
                 subjectsMap.set("other", {
                     ...subjectsMap.get("other"),
                     selected: subjectsMap.get("other").selected? true : selected,
@@ -47,7 +47,7 @@ const FlashcardList = function(props) {
                 if(!subjectsMap.has(flashcard.subject)) {
                     chaptersMap = new Map();
                     chaptersMap.set("other", {
-                        position: appContext.subjects.get(flashcard.subject).chapters.get("other").position,
+                        //position: appContext.subjects.get(flashcard.subject).chapters.get("other").position,
                         selected: selected,
                         flashcards: []
                     })
@@ -61,10 +61,10 @@ const FlashcardList = function(props) {
                 }
                 if(!stringInitialized(flashcard.chapter)) {
                     let tmpflashcards = chaptersMap.get("other").flashcards
-                    tmpflashcards[flashcard.position] = {
+                    tmpflashcards.push({
                         ...flashcard,
                         selected: selected
-                    }
+                    })
                     chaptersMap.set("other", {
                         ...chaptersMap.get("other"),
                         selected: chaptersMap.get("other").selected? true: selected,
@@ -74,19 +74,19 @@ const FlashcardList = function(props) {
                     if(chaptersMap.has(flashcard.chapter)) {
                         let chapter = chaptersMap.get(flashcard.chapter); 
                         chapter.selected = chapter.selected? true : selected
-                        chapter.flashcards[flashcard.position] = {
+                        chapter.flashcards.push({
                             ...flashcard,
                             selected: selected
-                        }
+                        })
                     } else {
                         let chapter = appContext.subjects.get(flashcard.subject).chapters.get(flashcard.chapter);
                         let tmpflashcards = []
-                        tmpflashcards[flashcard.position] = {
+                        tmpflashcards.push({
                             ...flashcard,
                             selected: selected
-                        }
+                        })
                         chaptersMap.set(flashcard.chapter, {
-                            position: chapter.position,
+                            //position: chapter.position,
                             selected: selected,
                             flashcards: tmpflashcards
                         })
@@ -97,15 +97,18 @@ const FlashcardList = function(props) {
         return subjectsMap;
     }
 
+    // console.log(props.flashcards)
+    // console.log( treeFromArray(props.flashcards) )
+
     const [state,setState] = useState(function getInitialState() {
         return {
-            subjects: arrayToMap(props.flashcards)
+            subjects: props.flashcards
         }
     });
 
     useEffect(() => {
         setState({
-            subjects: arrayToMap(props.flashcards)
+            subjects: props.flashcards
         })
     }, [props.flashcards])
 
@@ -127,10 +130,14 @@ const FlashcardList = function(props) {
         return (e) => {
             setState({
                 ...state,
-                subjects: new Map(state.subjects.set(subjectName, {
-                    ...state.subjects.get(subjectName),
-                    selected: !state.subjects.get(subjectName).selected
-                }))
+                // subjects: new Map(state.subjects.set(subjectName, {
+                //     ...state.subjects.get(subjectName),
+                //     selected: !state.subjects.get(subjectName).selected
+                // }))
+                subjects: setSubject(state.subjects, subjectName, {
+                    ...findNode(state.subjects, subjectName),
+                    selected: !findNode(state.subjects, subjectName).selected
+                })
             })
         }
     }
@@ -140,13 +147,14 @@ const FlashcardList = function(props) {
             let checked = e.target.checked
             setState({
                 ...state,
-                subjects: new Map(state.subjects.set(subjectName, {
-                    ...state.subjects.get(subjectName),
-                    chapters: new Map(state.subjects.get(subjectName).chapters.set(chapterName, {
-                        ...state.subjects.get(subjectName).chapters.get(chapterName),
-                        selected: !state.subjects.get(subjectName).chapters.get(chapterName).selected
-                    }))
-                }))
+                // subjects: new Map(state.subjects.set(subjectName, {
+                //     ...state.subjects.get(subjectName),
+                //     selected: !state.subjects.get(subjectName).selected
+                // }))
+                subjects: setChapter(state.subjects, subjectName, chapterName, {
+                    ...findNode(state.subjects, subjectName, chapterName),
+                    selected: !findNode(state.subjects, subjectName, chapterName).selected
+                })
             })
         }
     }
@@ -157,43 +165,21 @@ const FlashcardList = function(props) {
             if(oldIndex === newIndex) {
                 return;
             }
-            let newChapters = new Map(appContext.subjects.get(subjectName).chapters);
-            
-            newChapters.forEach(chapter => {
-                if(oldIndex === chapter.position) {
-                    chapter.position = newIndex;
-                    return
-                }
-                if(oldIndex < newIndex) {
-                    if(chapter.position > oldIndex && chapter.position <= newIndex) {
-                        chapter.position = chapter.position - 1;
-                    } 
-                } else {
-                    if(chapter.position < oldIndex && chapter.position >= newIndex) {
-                        chapter.position = chapter.position + 1;
-                    }
-                }
-            })
-
-            let newSubjects = new Map(appContext.subjects);
-            newSubjects.set(subjectName, {
-                ...appContext.subjects.get(subjectName),
-                chapters: newChapters
-            })
+            let newChapters = findNode(state.subjects, subjectName).chapters;
+            newChapters = arrayMoveImmutable(newChapters, oldIndex, newIndex)
             changeAppStateContext({
                 ...appContext,
-                subjects: newSubjects
-            })
-            let newStateSubjects = new Map(state.subjects)
-            let stateSubject = newStateSubjects.get(subjectName)
-            newChapters.forEach((chapter, chapterName) => {
-                if(stateSubject.chapters.get(chapterName)) {
-                    stateSubject.chapters.get(chapterName).position = chapter.position
-                }
+                subjects: setSubject(state.subjects, subjectName, {
+                    ...findNode(state.subjects, subjectName),
+                    chapters: newChapters
+                })
             })
             setState({
                 ...state,
-                subjects: newStateSubjects
+                subjects: setSubject(state.subjects, subjectName, {
+                    ...findNode(state.subjects, subjectName),
+                    chapters: newChapters
+                })
             })
         }
     }
@@ -204,62 +190,54 @@ const FlashcardList = function(props) {
             if(oldIndex === newIndex) {
                 return;
             }
-            let newFlashcards = new Map(appContext.flashcards);
-            
-            newFlashcards.forEach(flashcard => {
-                if(flashcard.subject === subjectName && flashcard.chapter === chapterName) {
-                    if(oldIndex === flashcard.position) {
-                        flashcard.position = newIndex;
-                        return
-                    }
-                    if(oldIndex < newIndex) {
-                        if(flashcard.position > oldIndex && flashcard.position <= newIndex) {
-                            flashcard.position = flashcard.position - 1;
-                        } 
-                    } else {
-                        if(flashcard.position < oldIndex && flashcard.position >= newIndex) {
-                            flashcard.position = flashcard.position + 1;
-                        }
-                    }
-                }
-            })
+            let flashcards = findNode(state.subjects, subjectName, chapterName).flashcards;
+            let newFlashcards = arrayMoveImmutable(flashcards, oldIndex, newIndex)
+
 
             changeAppStateContext({
                 ...appContext,
-                flashcards: newFlashcards
+                subjects: setChapter(state.subjects, subjectName, chapterName, {
+                    ...findNode(state.subjects, subjectName, chapterName),
+                    flashcards: newFlashcards
+                })
             })
 
             setState({
                 ...state,
-                subjects: arrayToMap(newFlashcards)
+                subjects: setChapter(state.subjects, subjectName, chapterName, {
+                    ...findNode(state.subjects, subjectName, chapterName),
+                    flashcards: newFlashcards
+                })
             })
         }
     }
 
     let list = []
     let otherSubject = null;
-    state.subjects.forEach((subject, subjectName) => {
+
+    state.subjects.forEach((subject, index) => {
 
         let chapters = [];
+        let subjectName = subject.id
         
-        if(subjectName === "other") {
+        if(subject.id === "other") {
             otherSubject = subject
         } else {
-            let chapterIndex = 0;
-            subject.chapters.forEach((chapter, chapterName) => {
+            subject.chapters.forEach((chapter, chapterIndex) => {
+                let chapterName = chapter.id
                 const DragHandleChapter = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={chapter.selected? faSortDown: faBars}/>);
-                chapters[chapter.position] = (
+                chapters[chapterIndex] = (
                 //Chapters
                     <SortableItem 
-                        key={`sortable-chapter-item-${chapter.position}`} 
-                        index={chapter.position}
+                        key={`sortable-chapter-item-${chapterIndex}`} 
+                        index={chapterIndex}
                         className={FlashCardListCSS["chapterlistitem"]}
                     >
                         <div 
                             className={chapter.selected? FlashCardListCSS["chapter-label-selected"] : FlashCardListCSS["chapter-label"]} 
                             key={'chapter-label-'+subjectName+"-"+chapterName} 
                             onClick={onSelectChapter(subjectName, chapterName)}>
-                                <DragHandleChapter></DragHandleChapter>{(chapter.position+1) + ". " + chapterName}
+                                <DragHandleChapter></DragHandleChapter>{(chapterIndex+1) + ". " + chapterName}
                         </div>
                         {/* Flashcards */}
                         <SortableContainer useDragHandle
@@ -272,8 +250,8 @@ const FlashcardList = function(props) {
                             {chapter.flashcards.map((flashcard, index) => {
                                 return (
                                 <SortableItem 
-                                    key={`sortable-flashcard-item-${flashcard.position}`} 
-                                    index={flashcard.position}
+                                    key={`sortable-flashcard-item-${index}`} 
+                                    index={index}
                                     className={`${FlashCardListCSS["flashcardli"]}
                                                 ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}    
                                 >
@@ -283,14 +261,13 @@ const FlashcardList = function(props) {
                                                     ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`}  
                                         key={'flashcard-link-'+flashcard.id} 
                                         to={`/editor/flashcard/${flashcard.id}`}>
-                                            {(flashcard.position + 1) + ". " +flashcard.question}
+                                            {(index + 1) + ". " +flashcard.question}
                                     </Link>
                                 </SortableItem>);
                             })}
                         </SortableContainer>
                     </SortableItem>
                 )
-                chapterIndex++;
             })
             list.push(
                 //Subjects
@@ -325,7 +302,7 @@ const FlashcardList = function(props) {
     let chapters = [];
 
     otherSubject.flashcards.forEach((flashcard, index) => {
-        chapters[flashcard.position] =  (
+        chapters[index] =  (
             <SortableItem 
                 key={`sortable-other-flashcard-${index}`} 
                 index={index}

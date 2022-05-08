@@ -240,21 +240,17 @@ function App() {
     const [appState, changeAppState] = useState(tmpState)
 
     function saveState(state) {
-        console.log(arrayFromMap(state.subjects))
 
 
         let tmpState = {
             ...state,
-            subjects: arrayFromMap(state.subjects),
+            subjects: state.subjects,
             flashcards: arrayFromMap(state.flashcards)
         }
         localStorage.setItem("appState", JSON.stringify(tmpState))
     }
 
     function updateState(newState) {
-        console.log("updating state")
-        console.log(newState)
-        
         changeAppState(newState)
         saveState(newState)
     }
