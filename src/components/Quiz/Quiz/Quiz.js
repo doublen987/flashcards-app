@@ -2,6 +2,8 @@ import React, { createRef, useContext, useEffect, useRef, useState } from 'react
 import * as ReactDOMServer from 'react-dom/server';
 import {AppStateContext, ChangeAppStateContext} from '../../App'
 import QuizCSS from './Quiz.module.css'
+import { faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Quiz(props) {
     let quizid = parseInt(props.quizid);
@@ -33,6 +35,9 @@ function Quiz(props) {
             else {
                 let currentquiz = appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard]
                 let answer = <div>
+                                <div className={QuizCSS.editbutton}>
+                                    <FontAwesomeIcon  className={QuizCSS.editbuttonicon} icon={faPencilAlt}/>
+                                </div>
                                 <div className={QuizCSS.quizsubject}>
                                     {currentquiz.subject}
                                 </div>
@@ -42,6 +47,9 @@ function Quiz(props) {
                                 {currentquiz.answer}
                             </div>;
                 quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer}>
+                    <div className={QuizCSS.editbutton}>
+                        <a href={'#/editor/flashcard/'+ appContext.quizes[quizid].flashcards[currentFlashcard].id}><FontAwesomeIcon  className={QuizCSS.editbuttonicon} icon={faPen}/></a>
+                    </div>
                     <div className={QuizCSS.quizsubject}>
                         {currentquiz.subject}
                     </div>

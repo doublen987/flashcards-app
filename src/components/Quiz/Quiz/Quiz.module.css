@@ -92,3 +92,20 @@
     font-size: 13px;
     color: #333e51;
 }
+
+.editbutton {
+    float: right;
+    top: 10px;
+    right: 10px;
+}
+
+.editbuttonicon {
+    font-size: 16px;
+    margin-right: 5px;
+    align-items : center;
+    color: #333e51;
+}
+
+.editbuttonicon:hover {
+    color: #d2ac34;
+}
