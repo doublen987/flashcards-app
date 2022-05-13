@@ -4,6 +4,7 @@ import {AppStateContext, ChangeAppStateContext} from '../../App'
 import QuizCSS from './Quiz.module.css'
 import { faPen, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { findFlashcardByIndex } from '../../util';
 
 function Quiz(props) {
     let quizid = parseInt(props.quizid);
@@ -27,13 +28,17 @@ function Quiz(props) {
         currentFlashcard = appContext.quizes[quizid].currentFlashcard
     }
 
+    let quizflash = appContext.quizes[quizid].flashcards[currentFlashcard]
+    let flashcardbody = findFlashcardByIndex(appContext.subjects, quizflash.id)
+    //console.log(flashcardbody)
+
     let quiz = "";
     if( appContext.quizes[quizid]) {
         if(currentFlashcard > -1) {
             if(!state.answerShown)
-                quiz = <div ref={node} className={QuizCSS.slideshow + " " + QuizCSS.slideshowQuestion} onClick={showAnswer}>{appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard].question}</div>
+                quiz = <div ref={node} className={QuizCSS.slideshow + " " + QuizCSS.slideshowQuestion} onClick={showAnswer}>{flashcardbody.question}</div>
             else {
-                let currentquiz = appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard]
+                let currentquiz = flashcardbody//appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard]
                 let answer = <div>
                                 <div className={QuizCSS.editbutton}>
                                     <FontAwesomeIcon  className={QuizCSS.editbuttonicon} icon={faPencilAlt}/>
@@ -123,7 +128,8 @@ function Quiz(props) {
     function showHint() {
 
         if(currentFlashcard > -1) {
-            let flashcard = appContext.quizes[quizid].flashcards[currentFlashcard]
+            //let quizflash = appContext.quizes[quizid].flashcards[currentFlashcard]
+            let flashcard = flashcardbody//findFlashcardByIndex(appContext.subjects, quizflash.id)
             let currentHint = null
             if(flashcard.currentHint != undefined) {
                 if(flashcard.currentHint < flashcard.hints.length - 1)
