@@ -212,12 +212,14 @@ function FlashcardEditor(props) {
             //Insert the flashcard into the new chapter
             if(stateflashcard.subject !== "") {
                 if(findNode(subjects, stateflashcard.subject)) {
+                    let locchapter = findNode(subjects,stateflashcard.subject, stateflashcard.chapter)
+                    locchapter = locchapter? locchapter : []
                     setChapter(subjects, stateflashcard.subject, stateflashcard.chapter, {
                         subject: stateflashcard.subject,
                         id: stateflashcard.chapter,
                         name: stateflashcard.chapter,
                         flashcards: [
-                            ...findNode(subjects,stateflashcard.subject, stateflashcard.chapter).flashcards,
+                            ...locchapter,
                             {
                                 ...stateflashcard
                             }
