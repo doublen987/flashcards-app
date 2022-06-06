@@ -68,41 +68,28 @@ let appInit = {
             "name": "Projektovanje Softvera"
         }]
     ]),
-    subjects: new Map([
-        ["Matematika 2", {
-            chapters: new Map([
-                ["other", {
+    subjects: [
+         {
+            id: "Math",
+            name: "Math",
+            chapters: [
+                 {
+                    id: "other",
                     name: "other",
                     position: 0,
-                    subject: "Matematika 2"
-                }],
-                ["Srednja vrednost", {
+                    subject: "Math",
+                    flashcards: []
+                },
+                {
+                    id: "Srednja vrednost",
                     name: "Srednja vrednost",
                     position: 1,
-                    subject: "Matematika 2"
-                }]
-            ])
-        }],
-        ["Statistika", {
-            chapters: new Map([
-                ["other", {
-                    name: "other",
-                    position: 0,
-                    subject: "Statistika"
-                }],
-                ["Dovoljnost statistika", {
-                    name: "Dovoljnost statistika",
-                    position: 1,
-                    subject: "Statistika"
-                }],
-                ["Ocene", {
-                    name: "Ocene",
-                    position: 2,
-                    subject: "Statistika"
-                }],
-            ])
-        }]
-    ]),
+                    subject: "Math",
+                    flashcards: []
+                }
+            ]
+        }
+    ],
     flashcards: new Map([[""+random+1, {
         id: ""+random+1,
         question: "Sta je lagranzova teorija?",
