@@ -30,7 +30,6 @@ function Quiz(props) {
 
     let quizflash = appContext.quizes[quizid].flashcards[currentFlashcard]
     let flashcardbody = findFlashcardByIndex(appContext.subjects, quizflash.id)
-    //console.log(flashcardbody)
 
     let quiz = "";
     if( appContext.quizes[quizid]) {
@@ -129,11 +128,14 @@ function Quiz(props) {
 
         if(currentFlashcard > -1) {
             //let quizflash = appContext.quizes[quizid].flashcards[currentFlashcard]
-            let flashcard = flashcardbody//findFlashcardByIndex(appContext.subjects, quizflash.id)
+            let tmpQuizFlashcard = appContext.quizes[quizid].flashcards.find(flashcard => flashcard.id == quizflash.id)//findFlashcardByIndex(appContext.subjects, quizflash.id)
             let currentHint = null
-            if(flashcard.currentHint != undefined) {
-                if(flashcard.currentHint < flashcard.hints.length - 1)
-                    currentHint = flashcard.currentHint + 1;
+            let flashcard = flashcardbody
+            if(tmpQuizFlashcard) 
+                currentHint = tmpQuizFlashcard.currentHint
+            if(currentHint != undefined) {
+                if(currentHint < flashcard.hints.length - 1)
+                    currentHint++;
                 else 
                     currentHint = 0;
             } else {
@@ -141,6 +143,7 @@ function Quiz(props) {
                     currentHint = 0;
                 }
             }
+
             changeAppStateContext({
                 ...appContext,
                 quizes: [
