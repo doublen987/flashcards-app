@@ -296,9 +296,44 @@ function FlashcardEditor(props) {
             
             findNode(newSubjects, prevflashcard.subject != ""? prevflashcard.subject : "other", prevflashcard.chapter != ""? prevflashcard.chapter : "other").flashcards.splice(flashcardindex,1)
 
+            function removeDeletedFlashcards(appContext) {
+                let quizes = [...appContext.quizes];
+                quizes.forEach((quiz, quizindex) => {  
+                    [...quiz.flashcards].forEach((flashcard, index) => {
+                        // let flashcardbody = findFlashcardByIndex(appContext.subjects, flashcard.id)
+                        // if(!flashcardbody) {
+                        //     quiz.flashcards.splice(index,1)
+                        //     updateQuiz = true;
+                        // }
+                        if(flashcard.id == flashcardid) {
+                            let newCurrentFlashcard = quiz.currentFlashcard;
+                            if(quiz.currentFlashcard >= quiz.flashcards.length - 1) {
+                                newCurrentFlashcard--
+                            }
+                            quizes = [
+                                ...appContext.quizes.slice(0, quizindex),
+                                {
+                                    ...appContext.quizes[quizindex],
+                                    currentFlashcard: newCurrentFlashcard,
+                                    flashcards: [
+                                        ...appContext.quizes[quizindex].flashcards.slice(0, index),
+                                        ...appContext.quizes[quizindex].flashcards.slice(index+1)
+                                    ]
+                                },
+                                ...appContext.quizes.slice(quizindex+1)
+                            ]
+                        }
+                    })
+                })
+                return quizes;
+                
+            }
+        
+
             changeAppStateContext({
                 ...appContext,
-                subjects: newSubjects
+                subjects: newSubjects,
+                quizes: removeDeletedFlashcards(appContext)
             })
             setFlashcard(baseflashcard)
         }

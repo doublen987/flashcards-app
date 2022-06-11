@@ -7,12 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { findFlashcardByIndex } from '../../util';
 
 function Quiz(props) {
+    
+
     let quizid = parseInt(props.quizid);
+    
 
     const appContext = useContext(AppStateContext);
     const changeAppStateContext = useContext(ChangeAppStateContext)
     const [state, setState] = useState({ answerShown: false })
     const node = createRef()
+
+    //removeDeletedFlashcards(appContext, quizid);
 
     const renderMath = () => {
         window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, node.current]);
@@ -29,27 +34,16 @@ function Quiz(props) {
     }
 
     let quizflash = appContext.quizes[quizid].flashcards[currentFlashcard]
-    let flashcardbody = findFlashcardByIndex(appContext.subjects, quizflash.id)
+    
 
     let quiz = "";
     if( appContext.quizes[quizid]) {
         if(currentFlashcard > -1) {
+            let flashcardbody = findFlashcardByIndex(appContext.subjects, quizflash.id)
             if(!state.answerShown)
                 quiz = <div ref={node} className={QuizCSS.slideshow + " " + QuizCSS.slideshowQuestion} onClick={showAnswer}>{flashcardbody.question}</div>
             else {
-                let currentquiz = flashcardbody//appContext.quizes[quizid].flashcards[appContext.quizes[quizid].currentFlashcard]
-                let answer = <div>
-                                <div className={QuizCSS.editbutton}>
-                                    <FontAwesomeIcon  className={QuizCSS.editbuttonicon} icon={faPencilAlt}/>
-                                </div>
-                                <div className={QuizCSS.quizsubject}>
-                                    {currentquiz.subject}
-                                </div>
-                                <div className={QuizCSS.quizchapter}>
-                                    {currentquiz.chapter}
-                                </div>
-                                {currentquiz.answer}
-                            </div>;
+                let currentquiz = flashcardbody
                 quiz = <div ref={node} className={QuizCSS.slideshow} onClick={showAnswer}>
                     <div className={QuizCSS.editbutton}>
                         <a href={'#/editor/flashcard/'+ appContext.quizes[quizid].flashcards[currentFlashcard].id}><FontAwesomeIcon  className={QuizCSS.editbuttonicon} icon={faPen}/></a>
