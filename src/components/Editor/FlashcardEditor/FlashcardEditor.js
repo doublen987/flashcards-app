@@ -81,89 +81,59 @@ function FlashcardEditor(props) {
         function addFlashcard() {
             let newid = ""+Date.now()
 
+            if(stateflashcard.subject == "") { stateflashcard.subject = "other"}
+            if(stateflashcard.chapter == "") { stateflashcard.chapter = "other"}
+
             let subjects = appContext.subjects
-            if(stateflashcard.subject !== "") {
-                if(findNode(subjects, stateflashcard.subject)) {
-                    if(!findNode(subjects, stateflashcard.subject, stateflashcard.chapter)) {
-                        setChapter(subjects, stateflashcard.subject, stateflashcard.chapter, {
-                            subject: stateflashcard.subject,
-                            id: stateflashcard.chapter,
-                            name: stateflashcard.chapter,
-                            flashcards: [
-                                {
-                                    id: newid,
-                                    ...stateflashcard
-                                }
-                            ]
-                        })
-                    } else {
-                        setChapter(subjects, stateflashcard.subject, stateflashcard.chapter, {
+            let subject = findNode(subjects, stateflashcard.subject)
+            if(subject) {
+                let chapter = findNode(subjects, stateflashcard.subject, stateflashcard.chapter)
+                if(chapter) {
+                    setChapter(subjects, stateflashcard.subject, stateflashcard.chapter, {
                         subject: stateflashcard.subject,
                         id: stateflashcard.chapter,
                         name: stateflashcard.chapter,
                         flashcards: [
-                            ...findNode(subjects,stateflashcard.subject, stateflashcard.chapter).flashcards,
+                            ...chapter.flashcards,
                             {
-                                id: newid,
-                                ...stateflashcard
+                                ...stateflashcard,
+                                id: newid
                             }
                         ]
                     })
-    
-                    }
                 } else {
-                    setSubject(subjects, stateflashcard.subject, {
-                        id: stateflashcard.subject,
-                        name: stateflashcard.subject,
-                        chapters: [{
-                            subject: stateflashcard.subject,
-                            id: "other",
-                            name: "other",
-                            flashcards: [
-                            ]
-                        }]
+                    setChapter(subjects, stateflashcard.subject, stateflashcard.chapter, {
+                        subject: stateflashcard.subject,
+                        id: stateflashcard.chapter,
+                        name: stateflashcard.chapter,
+                        flashcards: [
+                            {
+                                ...stateflashcard,
+                                id: newid
+                            }
+                        ]
                     })
-                    if(stateflashcard.chapter != "" && stateflashcard.chapter != null) {
-                        setChapter(subjects,stateflashcard.subject, stateflashcard.chapter, {
-                            subject: stateflashcard.subject,
-                            name: stateflashcard.chapter,
-                            id: stateflashcard.chapter,
-                            flashcards: [
-                                {
-                                    id: newid,
-                                    ...stateflashcard
-                                }
-                            ]
-                        })
-                    } else {
-                        setChapter(subjects,stateflashcard.subject, "other", {
-                            subject: stateflashcard.subject,
-                            id: "other",
-                            name: "other",
-                            flashcards: [
-                                {
-                                    id: newid,
-                                    ...stateflashcard
-                                }
-                            ]
-                        })
-                    }
                 }
             } else {
-                setSubject(subjects, "other", {
-                    ...findNode(subjects, "other"),
-                    flashcards: [
-                        ...findNode(subjects, "other").flashcards,
+                setSubject(subjects, stateflashcard.subject, {
+                    id: stateflashcard.subject,
+                    name: stateflashcard.subject,
+                    chapters: [
                         {
-                            id: "other",
-                            name: "other",
-                            ...stateflashcard
+                            subject: stateflashcard.subject,
+                            id: stateflashcard.chapter,
+                            name: stateflashcard.chapter,
+                            flashcards: [
+                                {
+                                    ...stateflashcard,
+                                    id: newid
+                                }
+                            ]
+
                         }
                     ]
                 })
             }
-
-            console.log(appContext)
 
             let newQuizes = appContext.quizes
             newQuizes.forEach(quiz => {
@@ -291,11 +261,7 @@ function FlashcardEditor(props) {
         }
 
         function deleteFlashcard() {
-            let flashcardindex = getFlashcardIndex(appContext.subjects, flashcardid, prevflashcard.subject, prevflashcard.chapter)
-            let newSubjects = [...appContext.subjects]
             
-            findNode(newSubjects, prevflashcard.subject != ""? prevflashcard.subject : "other", prevflashcard.chapter != ""? prevflashcard.chapter : "other").flashcards.splice(flashcardindex,1)
-
             function removeDeletedFlashcards(appContext) {
                 let quizes = [...appContext.quizes];
                 quizes.forEach((quiz, quizindex) => {  
@@ -328,14 +294,24 @@ function FlashcardEditor(props) {
                 return quizes;
                 
             }
-        
-
-            changeAppStateContext({
-                ...appContext,
-                subjects: newSubjects,
-                quizes: removeDeletedFlashcards(appContext)
-            })
-            setFlashcard(baseflashcard)
+            let flashcardindex = getFlashcardIndex(appContext.subjects, flashcardid, prevflashcard.subject, prevflashcard.chapter)
+            
+            let newSubjects = [...appContext.subjects]
+            
+            let foundChapter = findNode(newSubjects, prevflashcard.subject, prevflashcard.chapter)
+            if(foundChapter) {
+                console.log(foundChapter)
+                foundChapter.flashcards.splice(flashcardindex,1)
+                changeAppStateContext({
+                    ...appContext,
+                    subjects: newSubjects,
+                    quizes: removeDeletedFlashcards(appContext)
+                })
+                setFlashcard(baseflashcard)
+            } else {
+                console.log("Could not find flashcard to delete!")
+            }
+            
         }
 
         function addHint(hint) {
