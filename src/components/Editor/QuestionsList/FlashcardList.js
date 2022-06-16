@@ -9,7 +9,7 @@ import {arrayMoveImmutable} from 'array-move';
 import Aux from "../../hoc/Aux";
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import TreeNode from "./TreeNode/TreeNode";
 
 
 const FlashcardList = function(props) {
@@ -100,17 +100,17 @@ const FlashcardList = function(props) {
     // console.log(props.flashcards)
     // console.log( treeFromArray(props.flashcards) )
 
-    const [state,setState] = useState(function getInitialState() {
-        return {
-            subjects: props.flashcards
-        }
-    });
+    // const [state,setState] = useState(function getInitialState() {
+    //     return {
+    //         subjects: props.flashcards
+    //     }
+    // });
 
-    useEffect(() => {
-        setState({
-            subjects: props.flashcards
-        })
-    }, [props.flashcards])
+    // useEffect(() => {
+    //     setState({
+    //         subjects: props.flashcards
+    //     })
+    // }, [props.flashcards])
 
     const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
 
@@ -212,143 +212,161 @@ const FlashcardList = function(props) {
         }
     }
 
-    let list = []
-    let otherSubject = null;
+    function generateList() {
+        let list = []
+        let otherSubject = null;
 
-    state.subjects.forEach((subject, index) => {
+        state.subjects.forEach((subject, index) => {
 
-        let chapters = [];
-        let subjectName = subject.id
-        
-        if(subject.id === "other") {
-            otherSubject = subject
-        } else {
-            subject.chapters.forEach((chapter, chapterIndex) => {
-                let chapterName = chapter.id
-                const DragHandleChapter = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={chapter.selected? faSortDown: faBars}/>);
-                chapters[chapterIndex] = (
-                //Chapters
-                    <SortableItem 
-                        key={`sortable-chapter-item-${chapterIndex}`} 
-                        index={chapterIndex}
-                        className={FlashCardListCSS["chapterlistitem"]}
+            let chapters = [];
+            let subjectName = subject.id
+            
+            if(subject.id === "other") {
+                otherSubject = subject
+            } else {
+                subject.chapters.forEach((chapter, chapterIndex) => {
+                    let chapterName = chapter.id
+                    const DragHandleChapter = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={chapter.selected? faSortDown: faBars}/>);
+                    chapters[chapterIndex] = (
+                    //Chapters
+                        <SortableItem 
+                            key={`sortable-chapter-item-${chapterIndex}`} 
+                            index={chapterIndex}
+                            className={FlashCardListCSS["chapterlistitem"]}
+                        >
+                            <div 
+                                className={chapter.selected? FlashCardListCSS["chapter-label-selected"] : FlashCardListCSS["chapter-label"]} 
+                                key={'chapter-label-'+subjectName+"-"+chapterName} 
+                                onClick={onSelectChapter(subjectName, chapterName)}>
+                                    <DragHandleChapter></DragHandleChapter>{(chapterIndex+1) + ". " + chapterName}
+                            </div>
+                            {/* Flashcards */}
+                            <SortableContainer useDragHandle
+                                className={`${FlashCardListCSS["ol"]} 
+                                            ${chapter.selected? FlashCardListCSS["display_unset"] : 
+                                                                FlashCardListCSS["display_none"]}`}
+                                key={'chapter-contents-list-'+subjectName+"-"+chapterName} 
+                                onSortEnd={onChangeOrderFlashcard(subjectName, chapterName)}
+                            >
+                                {chapter.flashcards.map((flashcard, index) => {
+                                    return (
+                                    <SortableItem 
+                                        key={`sortable-flashcard-item-${index}`} 
+                                        index={index}
+                                        className={`${FlashCardListCSS["flashcardli"]}
+                                                    ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}    
+                                    >
+                                        <DragHandle></DragHandle>
+                                        <Link 
+                                            className={`${FlashCardListCSS["flashcardlink"]}  
+                                                        ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`}  
+                                            key={'flashcard-link-'+flashcard.id} 
+                                            to={`/editor/flashcard/${flashcard.id}`}>
+                                                {(index + 1) + ". " +flashcard.question}
+                                        </Link>
+                                    </SortableItem>);
+                                })}
+                            </SortableContainer>
+                        </SortableItem>
+                    )
+                })
+                list.push(
+                    //Subjects
+                    <li 
+                        className={FlashCardListCSS["subjectlistitem"]} 
+                        key={'subject-list-item-'+subjectName}
                     >
                         <div 
-                            className={chapter.selected? FlashCardListCSS["chapter-label-selected"] : FlashCardListCSS["chapter-label"]} 
-                            key={'chapter-label-'+subjectName+"-"+chapterName} 
-                            onClick={onSelectChapter(subjectName, chapterName)}>
-                                <DragHandleChapter></DragHandleChapter>{(chapterIndex+1) + ". " + chapterName}
-                        </div>
-                        {/* Flashcards */}
-                        <SortableContainer useDragHandle
-                            className={`${FlashCardListCSS["ol"]} 
-                                        ${chapter.selected? FlashCardListCSS["display_unset"] : 
-                                                            FlashCardListCSS["display_none"]}`}
-                            key={'chapter-contents-list-'+subjectName+"-"+chapterName} 
-                            onSortEnd={onChangeOrderFlashcard(subjectName, chapterName)}
+                            className={FlashCardListCSS["label"]}
+                            key={'subject-label-'+subjectName}  
+                            onClick={onSelectSubject(subjectName)}
                         >
-                            {chapter.flashcards.map((flashcard, index) => {
-                                return (
-                                <SortableItem 
-                                    key={`sortable-flashcard-item-${index}`} 
-                                    index={index}
-                                    className={`${FlashCardListCSS["flashcardli"]}
-                                                ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}    
-                                >
-                                    <DragHandle></DragHandle>
-                                    <Link 
-                                        className={`${FlashCardListCSS["flashcardlink"]}  
-                                                    ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`}  
-                                        key={'flashcard-link-'+flashcard.id} 
-                                        to={`/editor/flashcard/${flashcard.id}`}>
-                                            {(index + 1) + ". " +flashcard.question}
-                                    </Link>
-                                </SortableItem>);
-                            })}
+                            {subjectName}
+                        </div>
+                        <SortableContainer  useDragHandle
+                            className={`${FlashCardListCSS["ol"]} 
+                                        ${subject.selected? FlashCardListCSS["display_unset"] : 
+                                                            FlashCardListCSS["display_none"]}`}
+                            key={'subject-contents-list-'+subjectName} 
+                            onSortEnd={onChangeOrderChapter(subjectName)}
+                        >
+                            {chapters}
                         </SortableContainer>
-                    </SortableItem>
+                    </li>
+                
                 )
+            }
+
+            
+        })
+
+        let chapters = [];
+
+        if(otherSubject != null) {
+            otherSubject.flashcards.forEach((flashcard, index) => {
+                chapters[index] =  (
+                    <SortableItem 
+                        key={`sortable-other-flashcard-${index}`} 
+                        index={index}
+                        className={`${FlashCardListCSS["flashcardli"]}
+                                    ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}
+                    >
+                        <Link 
+                        key={'flashcard-link-'+flashcard.id} 
+                        className={`${FlashCardListCSS["flashcardlink"]}  
+                                    ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`} 
+                        to={`/editor/flashcard/${flashcard.id}`}>
+                            {(index+1) + ". " +flashcard.question}
+                        </Link>
+                    </SortableItem>
+                );
             })
             list.push(
                 //Subjects
                 <li 
                     className={FlashCardListCSS["subjectlistitem"]} 
-                    key={'subject-list-item-'+subjectName}
+                    key={'subject-list-item-'+"other"}
                 >
                     <div 
                         className={FlashCardListCSS["label"]}
-                        key={'subject-label-'+subjectName}  
-                        onClick={onSelectSubject(subjectName)}
+                        key={'subject-label-'+"other"}  
+                        onClick={onSelectSubject("other")}
                     >
-                        {subjectName}
+                        {"other"}
                     </div>
                     <SortableContainer  useDragHandle
                         className={`${FlashCardListCSS["ol"]} 
-                                    ${subject.selected? FlashCardListCSS["display_unset"] : 
+                                    ${otherSubject.selected? FlashCardListCSS["display_unset"] : 
                                                         FlashCardListCSS["display_none"]}`}
-                        key={'subject-contents-list-'+subjectName} 
-                        onSortEnd={onChangeOrderChapter(subjectName)}
+                        key={'subject-contents-list-'+"other"} 
+                        onSortEnd={onChangeOrderChapter("other")}
                     >
                         {chapters}
                     </SortableContainer>
                 </li>
-            
             )
         }
-
-        
-    })
-
-    let chapters = [];
-
-    if(otherSubject != null) {
-        otherSubject.flashcards.forEach((flashcard, index) => {
-            chapters[index] =  (
-                <SortableItem 
-                    key={`sortable-other-flashcard-${index}`} 
-                    index={index}
-                    className={`${FlashCardListCSS["flashcardli"]}
-                                ${flashcard.selected? FlashCardListCSS["flashcardli-selected"] : null}`}
-                >
-                    <Link 
-                    key={'flashcard-link-'+flashcard.id} 
-                    className={`${FlashCardListCSS["flashcardlink"]}  
-                                ${flashcard.selected? FlashCardListCSS["flashcardlink-selected"] : null}`} 
-                    to={`/editor/flashcard/${flashcard.id}`}>
-                        {(index+1) + ". " +flashcard.question}
-                    </Link>
-                </SortableItem>
-            );
-        })
-        list.push(
-            //Subjects
-            <li 
-                className={FlashCardListCSS["subjectlistitem"]} 
-                key={'subject-list-item-'+"other"}
-            >
-                <div 
-                    className={FlashCardListCSS["label"]}
-                    key={'subject-label-'+"other"}  
-                    onClick={onSelectSubject("other")}
-                >
-                    {"other"}
-                </div>
-                <SortableContainer  useDragHandle
-                    className={`${FlashCardListCSS["ol"]} 
-                                ${otherSubject.selected? FlashCardListCSS["display_unset"] : 
-                                                    FlashCardListCSS["display_none"]}`}
-                    key={'subject-contents-list-'+"other"} 
-                    onSortEnd={onChangeOrderChapter("other")}
-                >
-                    {chapters}
-                </SortableContainer>
-            </li>
-        )
+        return list;
     }
 
+    //let list = generateList();
+    
     return (
         <div className={FlashCardListCSS["list-container"]} >
-            {list}
+            <SortableContainer useDragHandle
+                    className={`${FlashCardListCSS["ol"]} 
+                                ${FlashCardListCSS["display_unset"]}`}
+                    //key={'chapter-contents-list-'+subjectName+"-"+chapterName} 
+                    //onSortEnd={type=="subject"? onChangeOrderChapter(node.id) : onChangeOrderFlashcard(node.subject, node.id)}
+            >
+                {
+                    appContext.subjects.map((subject, index) => {
+                        return (
+                            <TreeNode type="subject" node={subject} name={subject.name} nodeIndex={index}></TreeNode>
+                        );
+                    })
+                }
+            </SortableContainer>
             <Link 
                 style={{textDecoration: "none"}}
                 key={'link-new-question'} 
