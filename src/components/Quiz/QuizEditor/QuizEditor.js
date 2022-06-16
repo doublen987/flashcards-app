@@ -31,6 +31,8 @@ function shuffleFlashcards(shuffletype, flashcards) {
     switch (shuffletype) {
         case "random":
             return random(flashcards)
+        case "in-order":
+            return flashcards
         default: 
             return random(flashcards)
     }
@@ -61,7 +63,7 @@ function QuizEditor(props) {
         let initQuiz = {
             name: "",
             id: null,
-            shuffletype: "random",
+            shuffletype: "in-order",
             subjects: new Map(),
             currentFlashcard: 0,
         };
