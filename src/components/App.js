@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useCallback, useMemo} from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Editor from './Editor/Editor';
 import SetEditor from './Editor/SetEditor/SetEditor';
@@ -224,6 +224,10 @@ function App() {
     let lsState = JSON.parse(localStorage.getItem("appState"))
     let tmpState = getState(lsState);
 
+    const render = useCallback(
+        () => <Editor></Editor>,
+        []
+    );
     const [appState, changeAppState] = useState(tmpState)
 
     function saveState(state) {
@@ -242,25 +246,24 @@ function App() {
         saveState(newState)
     }
 
+    let editorMemo = useMemo(() => <Router>
+    <Nav></Nav>
+    <Switch>
+        <Route path="/editor" render={render}></Route>
+        <Route path="/quiz">
+            <QuizContainer></QuizContainer>
+        </Route>
+        <Route path="/">
+            <Home></Home>
+        </Route>
+    </Switch>
+</Router>, [])
 
     return (
         <AppStateContext.Provider value={appState}>
             <ChangeAppStateContext.Provider value={updateState}>
                 <div style={{height: "100%"}}>
-                    <Router>
-                        <Nav></Nav>
-                        <Switch>
-                            <Route path="/editor">
-                                <Editor></Editor>
-                            </Route>
-                            <Route path="/quiz">
-                                <QuizContainer></QuizContainer>
-                            </Route>
-                            <Route path="/">
-                                <Home></Home>
-                            </Route>
-                        </Switch>
-                    </Router>
+                    {editorMemo}
                 </div>
             </ChangeAppStateContext.Provider>
         </AppStateContext.Provider>

@@ -9,24 +9,26 @@ import {arrayMoveImmutable} from 'array-move';
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
+
+const SortableItem = sortableElement(({children, className}) => { 
+    return <li className={className}>{children}</li>
+});
+
+const SortableContainer = sortableContainer(({children, className}) => {
+    return (
+        <ul className={className}>
+            {children}
+        </ul>
+    );
+});
+
+
 const TreeNode = ({type, node, name, nodeIndex}) => {
 
     const appContext = useContext(AppStateContext)
     const changeAppStateContext = useContext(ChangeAppStateContext)
-
-    const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
-
-    const SortableItem = sortableElement(({children, className}) => { 
-        return <li className={className}>{children}</li>
-    });
-
-    const SortableContainer = sortableContainer(({children, className}) => {
-        return (
-            <ul className={className}>
-                {children}
-            </ul>
-        );
-    });
+    
 
     const [selected, setSelected] = useState(false);
 
@@ -117,7 +119,7 @@ const TreeNode = ({type, node, name, nodeIndex}) => {
                         )
                         } else {
                             return ( 
-                            <TreeNode key={"chapter_"+index} type="chapter"  node={childNode} name={index+". " + childNode.name}  nodeIndex={index}></TreeNode>
+                            <TreeNode key={"chapter-"+index} type="chapter"  node={childNode} name={index+". " + childNode.name}  nodeIndex={index}></TreeNode>
                             )
                         };
                     })}

@@ -11,6 +11,20 @@ import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import TreeNode from "./TreeNode/TreeNode";
 
+const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
+
+const SortableItem = sortableElement(({children, className}) => { 
+    return <li className={className}>{children}</li>
+});
+
+const SortableContainer = sortableContainer(({children, className}) => {
+    return (
+        <ul className={className}>
+            {children}
+        </ul>
+    );
+});
+
 
 const FlashcardList = function(props) {
     
@@ -97,6 +111,8 @@ const FlashcardList = function(props) {
         return subjectsMap;
     }
 
+    
+
     // console.log(props.flashcards)
     // console.log( treeFromArray(props.flashcards) )
 
@@ -112,19 +128,7 @@ const FlashcardList = function(props) {
     //     })
     // }, [props.flashcards])
 
-    const DragHandle = SortableHandle(() => <FontAwesomeIcon className={FlashCardListCSS.draghandle} icon={faBars}/>);
-
-    const SortableItem = sortableElement(({children, className}) => { 
-        return <li className={className}>{children}</li>
-    });
-
-    const SortableContainer = sortableContainer(({children, className}) => {
-        return (
-            <ul className={className}>
-                {children}
-            </ul>
-        );
-    });
+    
     
     function onSelectSubject(subjectName) {
         return (e) => {
@@ -362,7 +366,7 @@ const FlashcardList = function(props) {
                 {
                     appContext.subjects.map((subject, index) => {
                         return (
-                            <TreeNode type="subject" node={subject} name={subject.name} nodeIndex={index}></TreeNode>
+                            <TreeNode key={"subject-"+index} type="subject" node={subject} name={subject.name} nodeIndex={index}></TreeNode>
                         );
                     })
                 }
